@@ -1,0 +1,232 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\DEYTEK-DELL\\Desktop\\FileManagement\\FileSystemManagement\\FileFolderManagement.Web\\FileFolderManagement.Web.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\DEYTEK-DELL\\Desktop\\FileManagement\\FileSystemManagement\\FileFolderManagement.Web\\FileFolderManagement.Web.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\DEYTEK-DELL\\Desktop\\FileManagement\\FileSystemManagement\\FileFolderManagement.Web\\FileFolderManagement.Web.csproj",
+        "projectName": "FileFolderManagement.Web",
+        "projectPath": "C:\\Users\\DEYTEK-DELL\\Desktop\\FileManagement\\FileSystemManagement\\FileFolderManagement.Web\\FileFolderManagement.Web.csproj",
+        "packagesPath": "C:\\Users\\DEYTEK-DELL\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\DEYTEK-DELL\\Desktop\\FileManagement\\FileSystemManagement\\FileFolderManagement.Web\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\DEYTEK-DELL\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net5.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net5.0": {
+            "targetAlias": "net5.0",
+            "projectReferences": {
+              "C:\\Users\\DEYTEK-DELL\\Desktop\\FileManagement\\FileSystemManagement\\FileSystemManagement.Core\\FileSystemManagement.Core.csproj": {
+                "projectPath": "C:\\Users\\DEYTEK-DELL\\Desktop\\FileManagement\\FileSystemManagement\\FileSystemManagement.Core\\FileSystemManagement.Core.csproj"
+              },
+              "C:\\Users\\DEYTEK-DELL\\Desktop\\FileManagement\\FileSystemManagement\\FileSystemManagement.DAL\\FileSystemManagement.DAL.csproj": {
+                "projectPath": "C:\\Users\\DEYTEK-DELL\\Desktop\\FileManagement\\FileSystemManagement\\FileSystemManagement.DAL\\FileSystemManagement.DAL.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net5.0": {
+          "targetAlias": "net5.0",
+          "dependencies": {
+            "bootstrap": {
+              "target": "Package",
+              "version": "[5.1.0, )"
+            },
+            "jQuery": {
+              "target": "Package",
+              "version": "[3.6.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.401\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\DEYTEK-DELL\\Desktop\\FileManagement\\FileSystemManagement\\FileSystemManagement.Core\\FileSystemManagement.Core.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\DEYTEK-DELL\\Desktop\\FileManagement\\FileSystemManagement\\FileSystemManagement.Core\\FileSystemManagement.Core.csproj",
+        "projectName": "FileSystemManagement.Core",
+        "projectPath": "C:\\Users\\DEYTEK-DELL\\Desktop\\FileManagement\\FileSystemManagement\\FileSystemManagement.Core\\FileSystemManagement.Core.csproj",
+        "packagesPath": "C:\\Users\\DEYTEK-DELL\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\DEYTEK-DELL\\Desktop\\FileManagement\\FileSystemManagement\\FileSystemManagement.Core\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\DEYTEK-DELL\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net5.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net5.0": {
+            "targetAlias": "net5.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net5.0": {
+          "targetAlias": "net5.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[5.0.10, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[5.0.10, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[5.0.10, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.401\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\DEYTEK-DELL\\Desktop\\FileManagement\\FileSystemManagement\\FileSystemManagement.DAL\\FileSystemManagement.DAL.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\DEYTEK-DELL\\Desktop\\FileManagement\\FileSystemManagement\\FileSystemManagement.DAL\\FileSystemManagement.DAL.csproj",
+        "projectName": "FileSystemManagement.DAL",
+        "projectPath": "C:\\Users\\DEYTEK-DELL\\Desktop\\FileManagement\\FileSystemManagement\\FileSystemManagement.DAL\\FileSystemManagement.DAL.csproj",
+        "packagesPath": "C:\\Users\\DEYTEK-DELL\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\DEYTEK-DELL\\Desktop\\FileManagement\\FileSystemManagement\\FileSystemManagement.DAL\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\DEYTEK-DELL\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net5.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net5.0": {
+            "targetAlias": "net5.0",
+            "projectReferences": {
+              "C:\\Users\\DEYTEK-DELL\\Desktop\\FileManagement\\FileSystemManagement\\FileSystemManagement.Core\\FileSystemManagement.Core.csproj": {
+                "projectPath": "C:\\Users\\DEYTEK-DELL\\Desktop\\FileManagement\\FileSystemManagement\\FileSystemManagement.Core\\FileSystemManagement.Core.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net5.0": {
+          "targetAlias": "net5.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[5.0.10, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[5.0.10, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[5.0.10, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[5.0.10, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.401\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
