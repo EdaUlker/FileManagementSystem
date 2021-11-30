@@ -4,7 +4,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
     integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="/css/homepage.css">
+  <link rel="stylesheet" href="/FileSystemClient/css/homepage.css">
   <link href="https://unpkg.com/filepond@^4/dist/filepond.css" rel="stylesheet" />
 
   <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet">
@@ -27,7 +27,7 @@
   <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
     integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
 
-  <script src="/js/notify.min.js"></script>
+  <script src="/FileSystemClient/js/notify.min.js"></script>
 
 
 </head>
@@ -112,17 +112,27 @@
     </symbol>
   </svg>
 
-
+  <div>
+    <button id="korhan">Test</button>
+    <script>
+      $("#korhan").click(function () {
+        var newSrc = "/FileSystemClient/img/image.png"
+        // document.getElementById("fileImage").src = "/FileSystemClient/img/image.png";
+        $(".card-img-top").attr('src', newSrc);
+      }
+      );
+    </script>
+  </div>
   <div class="d-flex flex-column p-3 text-white bg-dark" style="width: 250px; height:100vh; position:fixed;">
-    <a href="/pages/homepage.html"
+    <a href="/FileSystemClient/pages/homepage.html"
       class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-      <img src="FileSystemClient/img/folder_30px.png" style="margin-right: 10px;">
+      <img src="/FileSystemClient/img/folder_30px.png" style="margin-right: 10px;">
       <span class="fs-4">File Management System</span>
     </a>
     <hr>
     <ul class="nav nav-pills flex-column mb-auto">
       <li class="nav-item">
-        <a href="FileSystemClient/pages/homepage.html" class="nav-link text-white" aria-current="page">
+        <a href="/FileSystemClient/pages/homepage.html" class="nav-link text-white" aria-current="page">
           <i class="fas fa-home">
             <use xlink:href="#home" />
           </i>&nbsp;&nbsp;&nbsp;Anasayfa</a>
@@ -240,7 +250,7 @@
     </div>
   </div>
 
-  <input type="file" class="my-pond" id="files" name="filepond" />
+  <input type="file" class="my-pond" id="files" name="filepond" onchange="showPreview(event);" />
 
 
 
@@ -348,7 +358,7 @@
         success: function (data) {
           $("#deleteBtn").addClass('disabled');
           $.notify("Silme işlemi başarıyla gerçekleştirildi!", "success");
-          
+
           window.setTimeout(function () { location.reload() }, 600);
 
         },
@@ -413,7 +423,7 @@
         nameFile = e.target.parentElement.innerText;
         nameList.push(nameFile);
         var breadcrumbContent = "";
-        breadcrumbContent = '<li onclick="back()" class="breadcrumb-item"><a href="#!" style ="text-decoration:none;" class="text-white fw-bold"><i class="fas fa-long-arrow-alt-left"></i>&nbsp; Geri</a></li><li class="breadcrumb-item"><a href="/pages/homepage.html">Anasayfa</a></li>';
+        breadcrumbContent = '<li onclick="back()" class="breadcrumb-item"><a href="#!" style ="text-decoration:none;" class="text-white fw-bold"><i class="fas fa-long-arrow-alt-left"></i>&nbsp; Geri</a></li><li class="breadcrumb-item"><a href="/FileSystemClient/pages/homepage.html">Anasayfa</a></li>';
         for (var i = 0; i < nameList.length; i++) {
           breadcrumbContent += '<li id="bc" data-id=' + idList[i] + ' ' + 'class="breadcrumb-item breadCrumbId"><a href="#" style="text-decoration:none; font-size:15px;">' + nameList[i] + '</a></li>';
         }
@@ -486,7 +496,35 @@
           request.onload = function () {
             if (request.status >= 200 && request.status < 300) {
               load(request.responseText);
+              console.log(file);
+              var uploadFile = file;
+              if (file.type = "image/jpeg") {
+                //alert('You must select an image file only'); 
+                document.getElementById("fileImage").src = "/FileSystemClient/img/image.png";
+                window.setTimeout(function () { location.reload() }, 600);
+
+              }
+             
+              if (uploadFile.size > 2000000) {
+                alert('Please upload a smaller image, max size is 2 MB');
+              }
+
             }
+
+            //var b = document.getElementsByClassName("filepond--file-status-main")[0].outerText;
+            //var b = $(".filepond--file-status-main").innerHtml;
+            // if (document.getElementsByClassName("filepond--file-status-main")[0] != null) {
+            //   var idPost = document.getElementsByClassName("filepond--file-status-main")[0].innerHTML;
+            //   console.log(idPost);
+            // }
+            // console.log(b);
+            // if(b == "Upload complete"){
+            //   console.log("bravo");
+            // }
+            //   $(".filepond--item").style("height:50px;")
+            // } 
+
+
             else {
               error('Error during Upload!');
             }
@@ -551,13 +589,38 @@
         },
         data: JSON.stringify({ parentId: id }),
         contentType: 'application/json',
-        // 
+
         success: function (data) {
-          // <img src="/img/128.png" class="card-img-top onright" style="cursor: pointer;"><hr style="border:none; height:3px; color:#000; background-color:#000;">
+
+
           var divContent = '';
+          //src="/FileSystemClient/img/128.png" 
           for (var i = 0; i < data.length; i++) {
-            divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '> <img src="FileSystemClient/img/128.png" class="card-img-top onright" style="cursor: pointer;"><hr style="border:none; height:3px; color:#000; background-color:#000;"><div class="card-body onright"><h6 class="card-title" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6></div></div></div>'
+            console.log(data[i]);
+
+            if(data[i].type == "file")
+            {
+               if ((/\.(gif|jpg|jpeg|tiff|png|jfif|psd|ai|bmp|svg)$/i).test(data[i].fileName))
+               {
+                divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><img id="fileImage" src="/FileSystemClient/img/image.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><hr style="border:none; height:3px; color:#000; background-color:#000;"><div class="card-body onright"><h6 class="card-title" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6></div></div></div>'
+               }
+               else if((/\.(docx|doc|txt|log|mog|jfm|gpd|-)$/i).test(data[i].fileName)){
+                divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><img id="fileImage" src="/FileSystemClient/img/text-format.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><hr style="border:none; height:3px; color:#000; background-color:#000;"><div class="card-body onright"><h6 class="card-title" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6></div></div></div>'
+               }
+               else if((/\.(pdf)$/i).test(data[i].fileName)){
+                divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><img id="fileImage" src="/FileSystemClient/img/pdf.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><hr style="border:none; height:3px; color:#000; background-color:#000;"><div class="card-body onright"><h6 class="card-title" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6></div></div></div>'
+               }
+
+            }
+            else if(data[i].type == "folder"){
+              divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><img id="fileImage" src="/FileSystemClient/img/128.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><hr style="border:none; height:3px; color:#000; background-color:#000;"><div class="card-body onright"><h6 class="card-title" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6></div></div></div>'
+
+            }
+            
+
           };
+
+
           $("#card").html(divContent);
           $("#name").text(username);
         },
@@ -576,61 +639,67 @@
 
     }
 
+    // function showPreview(event) {
+    //   console.log(event);
 
-    window.onload = function () {
-
-      if (window.File && window.FileList && window.FileReader) {
-        var filesInput = document.getElementById("files");
-
-        filesInput.addEventListener("change", function (event) {
-
-          var files = event.target.files;
-          var output = document.getElementById("result");
-
-          for (var i = 0; i < files.length; i++) {
-            var file = files[i];
-
-            if (!file.type.match('image'))
-              continue;
-
-            var picReader = new FileReader();
-
-            picReader.addEventListener("load", function (event) {
-
-              var picFile = event.target;
-              var img = new Image();
-              img.addEventListener("load", function () {
-                // window.setTimeout(function () { location.reload() }, 600);
-                alert('success');
-              });
-              img.addEventListener("error", function () {
-                alert('error');
-              });
-
-              picFile.fileName = file.name;
-              img.src = picFile.result;
-
-              var div = document.createElement("div");
-              div.className = "card mt-4";
-
-              div.innerHTML += '<img class="thumbnail" src=' + picFile.result + ' ' + 'title=' + picFile.fileName + '/>';
-
-              console.log(div);
-
-              output.insertBefore(div, null);
+    // }
 
 
-            });
-            picReader.readAsDataURL(file);
+    // window.onload = function () {
 
-          }
+    //   if (window.File && window.FileList && window.FileReader) {
+    //     var filesInput = document.getElementById("files");
 
-        });
-      }
-      else {
-        console.log("Your browser does not support File API");
-      }
-    }
+    //     filesInput.addEventListener("change", function (event) {
+
+    //       var files = event.target.files;
+    //       var output = document.getElementById("result");
+
+    //       for (var i = 0; i < files.length; i++) {
+    //         var file = files[i];
+
+    //         if (!file.type.match('image'))
+    //           continue;
+
+    //         var picReader = new FileReader();
+
+    //         picReader.addEventListener("load", function (event) {
+
+    //           var picFile = event.target;
+    //           var img = new Image();
+    //           img.addEventListener("load", function () {
+    //             // window.setTimeout(function () { location.reload() }, 600);
+    //             alert('success');
+    //           });
+    //           img.addEventListener("error", function () {
+    //             alert('error');
+    //           });
+
+    //           picFile.fileName = file.name;
+
+    //           img.src = picFile.result;
+
+    //           var div = document.createElement("div");
+    //           div.className = "card mt-4";
+
+    //           div.innerHTML += '<img class="thumbnail" src=' + picFile.result + ' ' + 'title=' + picFile.fileName + '/>';
+
+    //           console.log(div);
+
+    //           output.insertBefore(div, div.childNodes[0]);
+
+
+    //         });
+    //         picReader.readAsDataURL(file);
+
+    //       }
+
+    //     });
+    //   }
+    //   else {
+    //     console.log("Your browser does not support File API");
+    //   }
+    // }
 
 
 
