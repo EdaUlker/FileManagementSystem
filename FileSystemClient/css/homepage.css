@@ -29,3 +29,89 @@
     text-decoration: none;
     color: white;
 }
+
+#input    {
+    position: fixed; 
+    display: none;
+   left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    background: rgba(255,255,255,.8);
+    z-index: 999;
+}
+#popup {
+    position:relative; 
+    background: rgb(255,255,255);
+    border: 5px solid rgb(99, 95, 95);
+    left:60px;
+    top:60px;
+}
+
+#deleteConfirm{
+    position: fixed; 
+    display: none;
+   left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    background: rgba(255,255,255,.8);
+    z-index: 999;
+}
+
+.breadcrumb li a{
+    text-decoration: none;
+    color:white ;
+    font-size: 15px;
+
+}
+
+.filepond--drop-label {
+	color: #4c4e53;
+}
+
+
+
+
+.filepond--label-action {
+	text-decoration-color: #babdc0;
+}
+
+.filepond--panel-root {
+	border-radius: 2em;
+	background-color: #edf0f4;
+	height: 1em;
+}
+
+.filepond--item-panel {
+	background-color: #595e68;
+}
+
+.filepond--drip-blob {
+	background-color: #7f8a9a;
+} 
+
+.filepond--credits{
+    display: none;
+} 
+
+
+
+.filepond--list-scroller li
+{ 
+    display:inline-block;
+    list-style-type: none;
+    margin: 10px 0 0 0;
+}
+
+.filepond--list-scroller ul fieldset
+{
+    padding: 4px;
+    border: 1px solid #F2F0F0;
+    margin: 2px;
+}
+
+
+
+
+

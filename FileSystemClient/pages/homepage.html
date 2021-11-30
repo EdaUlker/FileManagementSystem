@@ -116,13 +116,13 @@
   <div class="d-flex flex-column p-3 text-white bg-dark" style="width: 250px; height:100vh; position:fixed;">
     <a href="/pages/homepage.html"
       class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-      <img src="/img/folder_30px.png" style="margin-right: 10px;">
+      <img src="FileSystemClient/img/folder_30px.png" style="margin-right: 10px;">
       <span class="fs-4">File Management System</span>
     </a>
     <hr>
     <ul class="nav nav-pills flex-column mb-auto">
       <li class="nav-item">
-        <a href="/pages/homepage.html" class="nav-link text-white" aria-current="page">
+        <a href="FileSystemClient/pages/homepage.html" class="nav-link text-white" aria-current="page">
           <i class="fas fa-home">
             <use xlink:href="#home" />
           </i>&nbsp;&nbsp;&nbsp;Anasayfa</a>
@@ -556,7 +556,7 @@
           // <img src="/img/128.png" class="card-img-top onright" style="cursor: pointer;"><hr style="border:none; height:3px; color:#000; background-color:#000;">
           var divContent = '';
           for (var i = 0; i < data.length; i++) {
-            divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '> <img src="/img/128.png" class="card-img-top onright" style="cursor: pointer;"><hr style="border:none; height:3px; color:#000; background-color:#000;"><div class="card-body onright"><h6 class="card-title" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6></div></div></div>'
+            divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '> <img src="FileSystemClient/img/128.png" class="card-img-top onright" style="cursor: pointer;"><hr style="border:none; height:3px; color:#000; background-color:#000;"><div class="card-body onright"><h6 class="card-title" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6></div></div></div>'
           };
           $("#card").html(divContent);
           $("#name").text(username);
