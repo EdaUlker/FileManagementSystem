@@ -11,13 +11,87 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
         <script src="https://www.markuptag.com/bootstrap/5/js/bootstrap.bundle.min.js"></script>
+        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
 
-       
     </head>
     <style>
+        .gradient-custom {
+            background: rgb(242,242,242);
+            background: linear-gradient(45deg, rgba(242,242,242,1) 0%, rgba(157,157,157,1) 100%);
+        } 
+
     </style>
     <body> 
-        <div class="container">
+        <form action="" method="post" id="loginForm">
+        <section class="vh-100 gradient-custom">
+            <div class="container py-5 h-100">
+               
+              <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                  <div class="card bg-dark text-white" style="border-radius: 1rem;">
+                   
+                    <div class="card-body p-5 text-center align-items-center">
+          
+                      <div class="mt-md-4 pb-5">
+          
+                        <h2 class="fw-bold mb-2 text-uppercase">File Management System</h2>
+                        <p class="text-white-50 mb-5 fs-5">Kullanıcı adınızı ve şifrenizi giriniz.</p>
+
+                        <div class="alert alert-danger mx-auto mb-2" data-dismiss="alert" id="errorResult" role="alert"> 
+                            <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+       
+                                <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+                                  <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                                </symbol>
+                              </svg>
+                              
+                              
+                              <div class="alert alert-danger d-flex align-items-center" role="alert">
+                                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+                                <div id="errorMessage">
+                                  An example danger alert with an icon
+                                </div>
+                              </div>
+                        </div>
+
+          
+                        <div class="form-outline form-white mb-4">
+                            <label class="form-label fs-5" for="typeEmailX">Kullanıcı Adı</label>
+                          <input type="text" class="form-control form-control-lg" id="inputUsername2" name="username" placeholder="Kullanıcı Adı">
+                          
+                        </div>
+          
+                        <div class="form-outline form-white mb-4">
+                            <label class="form-label fs-5" for="typePasswordX">Şifre</label>
+                          <input type="password" class="form-control form-control-lg" name="password" id="inputPassword2" placeholder="Şifre">
+                          
+                        </div>
+          
+                        <p class="small mb-5 pb-lg-2 fs-5"><a class="text-white-50" href="#!">Şifremi Unuttum</a></p>
+          
+                        <button class="btn btn-outline-light btn-lg px-5" type="submit" id="btn-login">Giriş Yap</button>
+          
+                        <div class="d-flex justify-content-center text-center mt-4 pt-1">
+                          <a href="#!" class="text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
+                          <a href="#!" class="text-white"><i class="fab fa-twitter fa-lg mx-4 px-2"></i></a>
+                          <a href="#!" class="text-white"><i class="fab fa-google fa-lg"></i></a>
+                        </div>
+          
+                      </div>
+          
+                      <!-- <div>
+                        <p class="mb-0">Don't have an account? <a href="#!" class="text-white-50 fw-bold">Sign Up</a></p>
+                      </div> -->
+          
+                    </div>
+                  </div>
+               <!-- </div> -->
+                </div>
+              </div>
+            </div>
+          </section>
+        </form>
+        <!-- <div class="container">
           
             <div class="row">
                 <div class="mx-auto">
@@ -57,7 +131,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <script>
             $('#errorResult').hide();      
