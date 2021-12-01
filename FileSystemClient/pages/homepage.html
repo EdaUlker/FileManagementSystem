@@ -112,18 +112,22 @@
     </symbol>
   </svg>
 
-  <div>
+  <!-- <div>
     <button id="korhan">Test</button>
     <script>
       $("#korhan").click(function () {
-        var newSrc = "/FileSystemClient/img/image.png"
-        // document.getElementById("fileImage").src = "/FileSystemClient/img/image.png";
-        $(".card-img-top").attr('src', newSrc);
+        alert("sdsadsad");
+        $("#sidebar").off("dblclick");
+
+        // var newSrc = "/FileSystemClient/img/image.png"
+        // // document.getElementById("fileImage").src = "/FileSystemClient/img/image.png";
+        // $(".card-img-top").attr('src', newSrc);
       }
       );
     </script>
-  </div>
-  <div class="d-flex flex-column p-3 text-white bg-dark" style="width: 250px; height:100vh; position:fixed;">
+  </div> -->
+  <div id="sidebar" class="d-flex flex-column p-3 text-white bg-dark"
+    style="width: 250px; height:100vh; position:fixed;">
     <a href="/FileSystemClient/pages/homepage.html"
       class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
       <img src="/FileSystemClient/img/folder_30px.png" style="margin-right: 10px;">
@@ -166,15 +170,16 @@
 
 
 
-  <div class="bg-dark" style="width:100%; height: 70px;">
+  <div class="bg-dark" id="breadcrumbBg" style="width:100%; height: 70px;">
     <nav style="--bs-breadcrumb-divider: '>'; font-size: 20px;" aria-label="breadcrumb">
       <ol class="breadcrumb" id="breadcrumb" style="margin-left:300px; padding-top: 15px; color:white; ">
-        <li class="breadcrumb-item"><a href="#!" style="text-decoration:none;" class="text-white fw-bold"><i
-              class="fas fa-long-arrow-alt-left"></i>&nbsp; Geri</a></li>
+        <li class="breadcrumb-item breadCrumbId"><a href="#!" style="text-decoration:none;" class="text-white fw-bold">
+            <i class="fas fa-long-arrow-alt-left"></i>&nbsp; Geri</a></li>
 
       </ol>
     </nav>
   </div>
+
 
 
   <div class="row" id="card" style="margin-left: 250px; margin-right:auto">
@@ -250,7 +255,7 @@
     </div>
   </div>
 
-  <input type="file" class="my-pond" id="files" name="filepond" onchange="showPreview(event);" />
+  <input type="file" class="my-pond" id="files" name="filepond"/>
 
 
 
@@ -279,6 +284,7 @@
     var token = localStorage.getItem("token");
 
 
+    
 
 
     $(".activeMenu").click(function () {
@@ -333,13 +339,14 @@
           } else {
             $("#createBtn").addClass('disabled');
             $.notify("Ekleme işlemi başarıyla gerçekleştirildi!", "success");
-            location.reload();
+            //location.reload();
           }
         },
         error: function (jqXHR, textStatus, errorThown) {
           console.log(textStatus);
         }
       });
+
       listFolder(clickedId);
     });
 
@@ -359,7 +366,7 @@
           $("#deleteBtn").addClass('disabled');
           $.notify("Silme işlemi başarıyla gerçekleştirildi!", "success");
 
-          window.setTimeout(function () { location.reload() }, 600);
+          //window.setTimeout(function () { location.reload() }, 600);
 
         },
         error: function (jqXHR, textStatus, errorThrown) {
@@ -387,7 +394,7 @@
           $("#editBtn").addClass('disabled');
           $.notify("Güncelleme işlemi başarıyla gerçekleştirildi!", "success");
           $("#dataFile").val = newName;
-          window.setTimeout(function () { location.reload() }, 600)
+          // window.setTimeout(function () { location.reload() }, 600)
         },
         error: function (jqXHR, textStatus, errorThrown) {
           $.notify("Güncelleme işlemi gerçekleştirilemedi!", "error");
@@ -399,6 +406,11 @@
     document.onclick = hideMenu;
     document.oncontextmenu = rightClick;
     document.ondblclick = click;
+    $("#sidebar").off(ondblclick);
+    $("#breadcrumbBg").off(ondblclick);
+    $("#sidebar").off(oncontextmenu);
+    $("#breadcrumbBg").off(oncontextmenu);
+
 
 
     function hideMenu() {
@@ -417,36 +429,55 @@
 
 
     function click(e) {
+
       if ($(e.target).is(".onright")) {
-        clickedId = e.target.parentElement.id;
-        idList.push(clickedId);
-        nameFile = e.target.parentElement.innerText;
-        nameList.push(nameFile);
-        var breadcrumbContent = "";
-        breadcrumbContent = '<li onclick="back()" class="breadcrumb-item"><a href="#!" style ="text-decoration:none;" class="text-white fw-bold"><i class="fas fa-long-arrow-alt-left"></i>&nbsp; Geri</a></li><li class="breadcrumb-item"><a href="/FileSystemClient/pages/homepage.html">Anasayfa</a></li>';
-        for (var i = 0; i < nameList.length; i++) {
-          breadcrumbContent += '<li id="bc" data-id=' + idList[i] + ' ' + 'class="breadcrumb-item breadCrumbId"><a href="#" style="text-decoration:none; font-size:15px;">' + nameList[i] + '</a></li>';
-        }
-
-        $("#breadcrumb").html(breadcrumbContent);
-        $(".breadCrumbId").click(function () {
-          listFolder($(this).data("id"));
-          clickId = $(this).data("id");
-          idList = idList.map(i => Number(i));
-          var index = idList.indexOf($(this).data("id"));
-          var e = nameList.splice(index + 1);
-
-          for (var i = 0; i < idList.length; i++) {
-            var b = document.getElementsByClassName("breadCrumbId")[index + 1];
-            b.remove();
-            //  var element = document.getElementsByClassName("breadCrumbId")[index+1];
-            //  console.log(element);
-            //  element.remove();   
+        if ((!($(e.target).is("#sidebar"))) && (!($(e.target).is("#breadcrumbBg")))) {
+          clickedId = e.target.parentElement.id;
+          idList.push(clickedId);
+          nameFile = e.target.parentElement.innerText;
+          nameList.push(nameFile);
+          var breadcrumbContent = "";
+          breadcrumbContent = '<li class="breadcrumb-item breadCrumbId"><a href="#" style ="text-decoration:none;" class="text-white fw-bold"><i class="fas fa-long-arrow-alt-left"></i>&nbsp; Geri</a></li><li class="breadcrumb-item"><a href="/FileSystemClient/pages/homepage.html">Anasayfa</a></li>';
+          for (var i = 0; i < nameList.length; i++) {
+            breadcrumbContent += '<li id="bc" data-id=' + idList[i] + ' ' + 'class="breadcrumb-item breadCrumbId"><a href="#" style="text-decoration:none; font-size:15px;">' + nameList[i] + '</a></li>';
           }
-        });
+
+          $("#breadcrumb").html(breadcrumbContent);
+          $(".breadCrumbId").click(function () {
+            listFolder($(this).data("id"));
+            clickId = $(this).data("id");
+            idList = idList.map(i => Number(i));
+            var index = idList.indexOf($(this).data("id"));
+            var e = nameList.splice(index + 1);
+
+            for (var i = 0; i < idList.length; i++) {
+              var b = document.getElementsByClassName("breadCrumbId")[index + 1];
+              b.remove();
+              //  var element = document.getElementsByClassName("breadCrumbId")[index+1];
+              //  console.log(element);
+              //  element.remove();   
+
+
+            }
+          });
+        }
+        listFolder(clickedId);
+
       }
-      listFolder(clickedId);
+
     }
+
+
+
+    // $("#sidebar").off("dblclick");
+
+    //$('body').unbind('click');
+    //$("#sidebar").dblclick(function () {
+    //   alert("sad")
+
+    //  // $('#sidebar').unbind('dblclick');
+    //  // $("body").off("dblclick")
+    // });
 
     document.addEventListener('DOMContentLoaded', function () {
       FilePond.registerPlugin(FilePondPluginFileValidateType,
@@ -468,7 +499,7 @@
 
 
     FilePond.setOptions({
-      labelIdle: '<div style="height:100%"><p>Drag &amp; Drop your files or <span class="filepond--label-action" tabindex="0">Browse</span></p></div>',
+      labelIdle: '<div style="width:100vh; height:100%;"><p>Drag &amp; Drop your files or <span class="filepond--label-action" tabindex="0">Browse</span></p></div>',
       allowDrop: true,
       dropOnPage: true,
       dropOnElement: false,
@@ -496,18 +527,26 @@
           request.onload = function () {
             if (request.status >= 200 && request.status < 300) {
               load(request.responseText);
-              console.log(file);
+            
               var uploadFile = file;
-              if (file.type = "image/jpeg") {
-                //alert('You must select an image file only'); 
-                document.getElementById("fileImage").src = "/FileSystemClient/img/image.png";
-                window.setTimeout(function () { location.reload() }, 600);
+              // if (file.type = "image/jpeg") {
+              //   //alert('You must select an image file only'); 
+              //   document.getElementById("fileImage").src = "/FileSystemClient/img/image.png";
+              //   window.setTimeout(function () { location.reload() }, 600);
 
-              }
-             
+              // }
+
+
+
               if (uploadFile.size > 2000000) {
-                alert('Please upload a smaller image, max size is 2 MB');
+                $.notify("Dosya yüklenemedi. Dosya 2 MB'dan küçük olmalıdır.", "error");
               }
+
+              listFolder(96);
+              
+              $.notify("Dosya başarıyla yüklendi.", "success");
+
+
 
             }
 
@@ -545,6 +584,8 @@
     });
 
 
+
+
     function rightClick(e) {
 
       if ($(e.target).is(".onright")) {
@@ -575,7 +616,7 @@
         menu.style.left = e.pageX + "px";
         menu.style.top = e.pageY + "px";
       }
-
+      e.preventDefault()
     }
 
     function listFolder(id) {
@@ -591,34 +632,30 @@
         contentType: 'application/json',
 
         success: function (data) {
-
-
           var divContent = '';
-          //src="/FileSystemClient/img/128.png" 
           for (var i = 0; i < data.length; i++) {
-            console.log(data[i]);
-
-            if(data[i].type == "file")
-            {
-               if ((/\.(gif|jpg|jpeg|tiff|png|jfif|psd|ai|bmp|svg)$/i).test(data[i].fileName))
-               {
-                divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><img id="fileImage" src="/FileSystemClient/img/image.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><hr style="border:none; height:3px; color:#000; background-color:#000;"><div class="card-body onright"><h6 class="card-title" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6></div></div></div>'
-               }
-               else if((/\.(docx|doc|txt|log|mog|jfm|gpd|-)$/i).test(data[i].fileName)){
-                divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><img id="fileImage" src="/FileSystemClient/img/text-format.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><hr style="border:none; height:3px; color:#000; background-color:#000;"><div class="card-body onright"><h6 class="card-title" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6></div></div></div>'
-               }
-               else if((/\.(pdf)$/i).test(data[i].fileName)){
-                divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><img id="fileImage" src="/FileSystemClient/img/pdf.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><hr style="border:none; height:3px; color:#000; background-color:#000;"><div class="card-body onright"><h6 class="card-title" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6></div></div></div>'
-               }
+            if (data[i].type == "folder") {
+              divContent += '<div class="col-sm-2 "><div class="card mt-4 listfolder" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><br><img id="fileImage" src="/FileSystemClient/img/128.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title text-center" id="dataFile">' + data[i].fileName + '</h6></div></div></div>'
 
             }
-            else if(data[i].type == "folder"){
-              divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><img id="fileImage" src="/FileSystemClient/img/128.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><hr style="border:none; height:3px; color:#000; background-color:#000;"><div class="card-body onright"><h6 class="card-title" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6></div></div></div>'
+            else if (data[i].type == "file") {
+              if ((/\.(gif|jpg|jpeg|tiff|png|jfif|psd|ai|bmp|svg)$/i).test(data[i].fileName)) {
+                divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><br><img id="fileImage" src="/FileSystemClient/img/image.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6></div></div></div>'
+              }
+              else if ((/\.(docx|doc|txt|log|mog|jfm|gpd)$/i).test(data[i].fileName)) {
+                divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><br><img id="fileImage" src="/FileSystemClient/img/text-format.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6></div></div></div>'
+              }
+              else if ((/\.(pdf)$/i).test(data[i].fileName)) {
+                divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><br><img id="fileImage" src="/FileSystemClient/img/pdf.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6></div></div></div>'
+              }
 
             }
-            
 
           };
+          // $('div img').each(function () {
+          //   console.log("dfgdf");
+          //   data[i].type[$("img").attr('class')] = $("img").attr('class');
+          // });
 
 
           $("#card").html(divContent);
@@ -631,92 +668,16 @@
       });
     }
 
+   
+
 
     if (token != null) {
       $(document).ready(function () {
         listFolder(null);
+
+
       });
-
     }
-
-    // function showPreview(event) {
-    //   console.log(event);
-
-    // }
-
-
-    // window.onload = function () {
-
-    //   if (window.File && window.FileList && window.FileReader) {
-    //     var filesInput = document.getElementById("files");
-
-    //     filesInput.addEventListener("change", function (event) {
-
-    //       var files = event.target.files;
-    //       var output = document.getElementById("result");
-
-    //       for (var i = 0; i < files.length; i++) {
-    //         var file = files[i];
-
-    //         if (!file.type.match('image'))
-    //           continue;
-
-    //         var picReader = new FileReader();
-
-    //         picReader.addEventListener("load", function (event) {
-
-    //           var picFile = event.target;
-    //           var img = new Image();
-    //           img.addEventListener("load", function () {
-    //             // window.setTimeout(function () { location.reload() }, 600);
-    //             alert('success');
-    //           });
-    //           img.addEventListener("error", function () {
-    //             alert('error');
-    //           });
-
-    //           picFile.fileName = file.name;
-
-    //           img.src = picFile.result;
-
-    //           var div = document.createElement("div");
-    //           div.className = "card mt-4";
-
-    //           div.innerHTML += '<img class="thumbnail" src=' + picFile.result + ' ' + 'title=' + picFile.fileName + '/>';
-
-    //           console.log(div);
-
-    //           output.insertBefore(div, div.childNodes[0]);
-
-
-    //         });
-    //         picReader.readAsDataURL(file);
-
-    //       }
-
-    //     });
-    //   }
-    //   else {
-    //     console.log("Your browser does not support File API");
-    //   }
-    // }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   </script>
 </body>
 
