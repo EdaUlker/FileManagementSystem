@@ -127,9 +127,9 @@
 	background-color: #595e68;
 }
 
-li .filepond--item{
-    /*width:50vh;*/
-    margin-left:50px;
+.filepond--item{
+    width:50vh;
+    /*margin-left:150px;*/
 }
 
 .filepond--file-wrapper{
