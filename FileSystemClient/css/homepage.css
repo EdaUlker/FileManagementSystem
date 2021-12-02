@@ -83,14 +83,33 @@
 
 }
 
-.filepond--drop-label {	
-    color: #4c4e53;
-    height: auto!important;
-    width: auto!important; 
+div .filepond--drop-label {	
+    height: 100vh;
+    width:75vw;
+    margin-left:5vw;
+    margin-top: 10vw;
+   /* color: #4c4e53;
+    /*width: auto!important; 
     /*height: auto!important; 
     /*width: auto!important;
     /*padding: 0 150px;*/
+    /* background-image: url(/FileSystemClient/img/file-upload.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed; 
+    cursor: pointer;
+     */
    
+}
+
+.filepond--drop-label div{
+    width: 100vw;
+    height: 100vh;
+    /*margin-left: 35px;*/
+}
+
+.filepond--drop-label label{
+   /* margin-left:20vw;*/
 }
 
 [data-filepond-item-state='processing-complete'] .filepond--item-panel {
@@ -127,8 +146,15 @@
 	background-color: #595e68;
 }
 
+/* li .filepond-item{
+    width:2.5vw;
+    position: absolute;
+    left: 50%;
+} */
+
 .filepond--item{
-    width:50vh;
+
+   /* width:35vw; */
     /*margin-left:150px;*/
 }
 
@@ -144,6 +170,11 @@
 .filepond--credits{
     display: none;
 } 
+
+.filepond--list{
+    width:35vw;
+    margin-left: 30vw;
+}
 
 
 
@@ -163,23 +194,22 @@
 
 
 
-/* @media screen and (max-width: 800px) {
+@media screen and (max-width: 800px) {
     .column {
       flex: 50%;
       max-width: 50%;
     }
   }
-   */
+
   
   /* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
-  
-  /* @media screen and (max-width: 600px) {
+@media screen and (max-width: 600px) {
     .column {
       flex: 100%;
       max-width: 100%;
     }
-  }
- */
+  } 
+
 
 
 
