@@ -226,7 +226,7 @@
           <input type="text" class="form-control" id="createName" name="inputFile">
         </div>
         <div class="modal-footer">
-          <button type="button" id="createBtn" class="btn btn-success">Dosya Oluştur</button>
+          <button type="button" id="createBtn" class="btn btn-success folderText">Dosya Oluştur</button>
         </div>
       </div>
     </div>
@@ -282,7 +282,7 @@
     var username = localStorage.getItem("username");
     var token = localStorage.getItem("token");
 
-    
+
 
 
 
@@ -309,6 +309,8 @@
       document.getElementById("createFolder").style.display = "block";
     });
 
+
+
     document.getElementById("createName").addEventListener('change', updateValue);
 
     function updateValue(e) {
@@ -327,26 +329,54 @@
         headers: {
           "authorization": "Bearer " + token
         },
-        data: JSON.stringify({ name: createName, parentId: clickedId }),
+
+        data: JSON.stringify({ name: createName, parentId : clickedId }),
+        //"if": { clickedId: 0 },
+        // "then": { clickedId: null },
         contentType: 'application/json',
         success: function (data) {
-          console.log(data.createName);
-          if (createName == '') {
-            $.notify("Ekleme işlemi gerçekleştirilemedi. Dosya adı boş geçilemez!", "error");
-          } if (createName.length > 20) {
-            $.notify("Ekleme işlemi gerçekleştirilemedi. Dosya adının uzunluğu 20 karakteri geçemez!", "error");
-          } else {
+          console.log(clickedId);
+          //console.log(data.isSuccess);
+          if (data.isSuccess == true) {
+            if (data.parentId == 0) {
+              clickedId = null;
+            }
+            
             $("#createBtn").addClass('disabled');
             $.notify("Ekleme işlemi başarıyla gerçekleştirildi!", "success");
-            //location.reload();
+            $("#createFolder").fadeOut('120000');
+
+
           }
+
+          else {
+            //$.notify("Ekleme işlemi gerçekleştirilemedi","error");
+            if (createName == "") {
+              $.notify("Ekleme işlemi gerçekleştirilemedi. İsim alanı boş geçilemez!", "error");
+              $("#createFolder").fadeOut('120000');
+            }
+            if (createName.length > 20) {
+              $.notify("Ekleme işlemi gerçekleştirilemedi. İsim 20 karakterden uzun olamaz!", "error");
+              $("#createFolder").fadeOut("120000");
+            }
+
+          }
+
+
+
+
+          //location.reload();
         },
+
+
         error: function (jqXHR, textStatus, errorThown) {
+
           console.log(textStatus);
         }
+
       });
 
-      listFolder(clickedId);
+      //listFolder(clickedId);
     });
 
 
@@ -364,12 +394,16 @@
         success: function (data) {
           $("#deleteBtn").addClass('disabled');
           $.notify("Silme işlemi başarıyla gerçekleştirildi!", "success");
+          $("#deleteConfirm").fadeOut('120000');
+          console.log(window.location.href);
+
 
           //window.setTimeout(function () { location.reload() }, 600);
 
         },
         error: function (jqXHR, textStatus, errorThrown) {
           $.notify("Silme işlemi başarısız", "error");
+          $("#deleteConfirm").fadeOut('120000');
         }
       });
     })
@@ -393,10 +427,12 @@
           $("#editBtn").addClass('disabled');
           $.notify("Güncelleme işlemi başarıyla gerçekleştirildi!", "success");
           $("#dataFile").val = newName;
+          $("#input").fadeOut('120000');
           // window.setTimeout(function () { location.reload() }, 600)
         },
         error: function (jqXHR, textStatus, errorThrown) {
           $.notify("Güncelleme işlemi gerçekleştirilemedi!", "error");
+          $("#input").fadeOut('120000');
         }
       });
     }
@@ -409,7 +445,7 @@
     $("#breadcrumbBg").off(ondblclick);
     $("#sidebar").off(oncontextmenu);
     $("#breadcrumbBg").off(oncontextmenu);
- 
+
 
 
 
@@ -583,6 +619,9 @@
         let menuBlock = document.getElementsByClassName("activeMenu")[0];
         menuBlock.style.display = 'block';
         document.getElementsByClassName("deleteFolder")[0].style.display = 'block';
+        document.getElementsByClassName("newFolder")[0].text = "Yeni Dosya";
+        document.getElementsByClassName("folderText")[0].innerText = "Dosya Oluştur";
+        document.getElementsByClassName("modal-title")[1].innerText = "Yeni Dosya";
       }
 
       else {
@@ -590,6 +629,8 @@
         menuNone.style.display = 'none';
         document.getElementsByClassName("deleteFolder")[0].style.display = 'none';
         document.getElementsByClassName("newFolder")[0].text = "Yeni Klasör";
+        document.getElementsByClassName("folderText")[0].innerText = "Klasör Oluştur";
+        document.getElementsByClassName("modal-title")[1].innerText = "Yeni Klasör";
       }
 
       e.preventDefault();
@@ -599,6 +640,7 @@
       }
 
       else {
+
         var menu = document.getElementById("contextMenu");
         menu.style.display = "block";
         menu.style.left = e.pageX + "px";
@@ -626,7 +668,7 @@
           for (var i = 0; i < data.length; i++) {
             if (data[i].type == "folder") {
               divContent += '<div class="col-sm-2 "><div class="card mt-4 listfolder" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><br><img id="fileImage" src="/FileSystemClient/img/128.png"  class="card-img-top onright ' + data[i].type + '"style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title text-center" id="dataFile">' + data[i].fileName + '</h6></div></div></div>'
-              
+
 
             }
             else if (data[i].type == "file") {
@@ -642,18 +684,18 @@
 
             }
 
-  
+
 
 
           };
-   
-         
+
+
           $("#card").html(divContent);
           $("#name").text(username);
- 
+
         },
         error: function (jqXHR, textStatus, errorThrown) {
-          window.location = "404.html";
+          window.location = "/FileSystemClient/pages/login.html";
         }
 
       });
@@ -664,9 +706,9 @@
 
     if (token != null) {
       $(document).ready(function () {
-        listFolder(null);
-    
-      
+        listFolder(0);
+
+
 
       });
     }
