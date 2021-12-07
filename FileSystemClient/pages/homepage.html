@@ -5,7 +5,7 @@
     integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
   <link rel="stylesheet" href="/FileSystemClient/css/homepage.css">
-  <link href="https://unpkg.com/filepond@^4/dist/filepond.css" rel="stylesheet" />
+  <!-- <link href="https://unpkg.com/filepond@^4/dist/filepond.css" rel="stylesheet" /> -->
 
   <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet">
 
@@ -253,7 +253,9 @@
     </div>
   </div>
 
-  <input type="file" class="my-pond" id="files" name="filepond" />
+  
+    <input type="file" class="my-pond" id="files" name="filepond" />
+  
 
 
 
@@ -330,13 +332,14 @@
           "authorization": "Bearer " + token
         },
 
-        data: JSON.stringify({ name: createName, parentId: clickedId }),
+        data: JSON.stringify({ name: createName}),
         contentType: 'application/json',
         success: function (data) {
           if (data.isSuccess == true) {
-            $("#createBtn").addClass('disabled');
+            //$("#createBtn").addClass('disabled');
             $.notify("Ekleme işlemi başarıyla gerçekleştirildi!", "success");
             $("#createFolder").fadeOut('120000');
+            //listFolder(clickedId);
           }
 
           else {
@@ -367,7 +370,7 @@
       });
 
 
-      listFolder(clickedId);
+
     });
 
 
@@ -380,37 +383,24 @@
         headers: {
           "authorization": "Bearer " + token
         },
-        data: JSON.stringify({ folderId: clickedId, parentId:parentId }),
+        data: JSON.stringify({ folderId: clickedId }),
         contentType: 'application/json',
         success: function (data) {
-          //console.log($(this));
           if (data.isSuccess == true) {
             //$("#deleteBtn").addClass('disabled');
             $.notify("Silme işlemi başarıyla gerçekleştirildi!", "success");
             $("#deleteConfirm").fadeOut('120000');
-            listFolder(parentId);
 
           } else {
             $.notify("Silme işlemi başarısız!", "error");
           }
-
-
-          //window.setTimeout(function () { location.reload() }, 600);
-
         },
         error: function (jqXHR, textStatus, errorThrown) {
           $.notify("Silme işlemi başarısız", "error");
           $("#deleteConfirm").fadeOut('120000');
         }
-
-      
       });
-
-
-     
-
-    
-
+      //listFolder(parentId);
     })
 
 
@@ -428,33 +418,33 @@
         headers: {
           "authorization": "Bearer " + token
         },
-        data: JSON.stringify({ folderId: clickedId, name: newName, status: 1, parentId:parentId }),
+        data: JSON.stringify({ folderId: clickedId, name: newName, status: 1}),
         contentType: 'application/json',
         success: function (data) {
           if (data.isSuccess == true) {
             if (newName.length < 20 && newName != "") {
-              $("#editBtn").addClass('disabled');
+              //$("#editBtn").addClass('disabled');
               $.notify("Güncelleme işlemi başarıyla gerçekleştirildi!", "success");
               $("#dataFile").val = newName;
               $("#input").fadeOut('120000');
-              listFolder(parentId);
-             
+              //listFolder(id);
+
 
             }
-            else {
-              $.notify("Güncelleme işlemi başarısız!", "error");
+            else if (newName == "") {
+              $.notify("Güncelleme işlemi başarısız. Klasör ismi boş olamaz!", "error");
             }
           }
-          else {
-            $.notify("Güncelleme işlemi başarısız!", "error");
+          else if (newName.length > 20) {
+            $.notify("Güncelleme işlemi başarısız. Klasör ismi 20 karakterden fazla olamaz!", "error");
           }
         },
         error: function (jqXHR, textStatus, errorThrown) {
-          $.notify("Güncelleme işlemi gerçekleştirilemedi!", "error");
+          $.notify("Güncelleme işlemi başarısız!", "error");
           $("#input").fadeOut('120000');
         }
       });
-      
+
     }
 
 
@@ -462,6 +452,9 @@
     document.oncontextmenu = rightClick;
     document.ondblclick = click;
     $("#sidebar").off(ondblclick);
+    //document.getElementById("sidebar").onclick = function() { return false; } 
+    //$('#sidebar').click(false);
+    // $("#sidebar").unbind("click");
     $("#breadcrumbBg").off(ondblclick);
     $("#sidebar").off(oncontextmenu);
     $("#breadcrumbBg").off(oncontextmenu);
@@ -485,7 +478,6 @@
 
 
     function click(e) {
-
       if ($(e.target).is(".onright")) {
         if ((!($(e.target).is("#sidebar"))) && (!($(e.target).is("#breadcrumbBg")))) {
           clickedId = e.target.parentElement.id;
@@ -571,24 +563,25 @@
           request.onload = function () {
             if (request.status >= 200 && request.status < 300) {
               load(request.responseText);
+              $.notify("Dosya başarıyla yüklendi.", "success");
 
-              var uploadFile = file;
+              // var uploadFile = file;
               // if (file.type = "image/jpeg") {
               //   //alert('You must select an image file only'); 
               //   document.getElementById("fileImage").src = "/FileSystemClient/img/image.png";
-              //   window.setTimeout(function () { location.reload() }, 600);
+              //   
 
               // }
 
 
 
-              if (uploadFile.size > 2000000) {
-                $.notify("Dosya yüklenemedi. Dosya 2 MB'dan küçük olmalıdır.", "error");
-              }
+              // if (uploadFile.size > 2000000) {
+              //   $.notify("Dosya yüklenemedi. Dosya 2 MB'dan küçük olmalıdır.", "error");
+              // }
 
               listFolder(96);
 
-              $.notify("Dosya başarıyla yüklendi.", "success");
+
 
 
 
@@ -609,7 +602,7 @@
 
 
             else {
-              error('Error during Upload!');
+              $.notify('Dosya yüklenirken hata!', "error");
             }
           };
           request.send(formData);
@@ -687,28 +680,32 @@
           var divContent = '';
           for (var i = 0; i < data.length; i++) {
             if (data[i].type == "folder") {
-              divContent += '<div class="col-sm-2 "><div class="card mt-4 listfolder" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><br><img id="fileImage" src="/FileSystemClient/img/128.png"  class="card-img-top onright ' + data[i].type + '"style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title text-center" id="dataFile">' + data[i].fileName + '</h6></div></div></div>'
-
-
+              divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder onright" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><br><img id="fileImage" src="/FileSystemClient/img/128.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title text-center onright" id="dataFile">' + data[i].fileName + '</h6></div></div></div>'
             }
             else if (data[i].type == "file") {
               if ((/\.(gif|jpg|jpeg|tiff|png|jfif|psd|ai|bmp|svg)$/i).test(data[i].fileName)) {
-                divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><br><img id="fileImage" src="/FileSystemClient/img/image.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6></div></div></div>'
+                divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder onright" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><br><img id="fileImage" src="/FileSystemClient/img/image.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title onright" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6></div></div></div>'
               }
               else if ((/\.(docx|doc|txt|log|mog|jfm|gpd)$/i).test(data[i].fileName)) {
-                divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><br><img id="fileImage" src="/FileSystemClient/img/text-format.png"  class="card-img-top onright' + data[i].type + '"style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6></div></div></div>'
+                divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder onright" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><br><img id="fileImage" src="/FileSystemClient/img/text-format.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title onright" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6></div></div></div>'
               }
               else if ((/\.(pdf)$/i).test(data[i].fileName)) {
-                divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><br><img id="fileImage" src="/FileSystemClient/img/pdf.png"  class="card-img-top onright' + data[i].type + '"style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6></div></div></div>'
+                divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder onright" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><br><img id="fileImage" src="/FileSystemClient/img/pdf.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title onright" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6></div></div></div>'
+              }
+              else if ((/\.(json)$/i).test(data[i].fileName)) {
+                divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder onright" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><br><img id="fileImage" src="/FileSystemClient/img/json_64px.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title onright" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6></div></div></div>'
+              }
+              else if ((/\.(sln)$/i).test(data[i].fileName)) {
+                divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder onright" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><br><img id="fileImage" src="/FileSystemClient/img/vs.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title onright" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6></div></div></div>'
+              }
+              else {
+                divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder onright" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><br><img id="fileImage" src="/FileSystemClient/img/empty-file.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title onright" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6></div></div></div>'
+
               }
 
             }
 
-
-
-
           };
-
 
           $("#card").html(divContent);
           $("#name").text(username);
@@ -719,6 +716,8 @@
         }
 
       });
+
+
     }
 
 
