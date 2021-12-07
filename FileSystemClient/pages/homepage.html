@@ -275,7 +275,7 @@
   <script>
     var clickedId = 0, parentId = 0;
     var nameFile = "", newName = "", createName = "", uploadFileName = "";;
-    var parentId = null;
+    //var parentId = null;
     var idList = [];
     var nameList = [];
 
@@ -330,32 +330,25 @@
           "authorization": "Bearer " + token
         },
 
-        data: JSON.stringify({ name: createName, parentId : clickedId }),
-        //"if": { clickedId: 0 },
-        // "then": { clickedId: null },
+        data: JSON.stringify({ name: createName, parentId: clickedId }),
         contentType: 'application/json',
         success: function (data) {
-          console.log(clickedId);
-          //console.log(data.isSuccess);
           if (data.isSuccess == true) {
-            if (data.parentId == 0) {
-              clickedId = null;
-            }
-            
             $("#createBtn").addClass('disabled');
             $.notify("Ekleme işlemi başarıyla gerçekleştirildi!", "success");
             $("#createFolder").fadeOut('120000');
-
-
           }
 
           else {
-            //$.notify("Ekleme işlemi gerçekleştirilemedi","error");
-            if (createName == "") {
+            if (createName != "") {
+              $.notify("Aynı adlı klasör zaten var!", "error");
+              $("#createFolder").fadeOut('120000');
+            }
+            else if (createName == "") {
               $.notify("Ekleme işlemi gerçekleştirilemedi. İsim alanı boş geçilemez!", "error");
               $("#createFolder").fadeOut('120000');
             }
-            if (createName.length > 20) {
+            else if (createName.length > 20) {
               $.notify("Ekleme işlemi gerçekleştirilemedi. İsim 20 karakterden uzun olamaz!", "error");
               $("#createFolder").fadeOut("120000");
             }
@@ -363,20 +356,18 @@
           }
 
 
-
-
-          //location.reload();
         },
 
 
         error: function (jqXHR, textStatus, errorThown) {
-
+          $.notify("Klasör kaydedilemedi!", "error");
           console.log(textStatus);
         }
 
       });
 
-      //listFolder(clickedId);
+
+      listFolder(clickedId);
     });
 
 
@@ -389,13 +380,19 @@
         headers: {
           "authorization": "Bearer " + token
         },
-        data: JSON.stringify({ folderId: clickedId }),
+        data: JSON.stringify({ folderId: clickedId, parentId:parentId }),
         contentType: 'application/json',
         success: function (data) {
-          $("#deleteBtn").addClass('disabled');
-          $.notify("Silme işlemi başarıyla gerçekleştirildi!", "success");
-          $("#deleteConfirm").fadeOut('120000');
-          console.log(window.location.href);
+          //console.log($(this));
+          if (data.isSuccess == true) {
+            //$("#deleteBtn").addClass('disabled');
+            $.notify("Silme işlemi başarıyla gerçekleştirildi!", "success");
+            $("#deleteConfirm").fadeOut('120000');
+            listFolder(parentId);
+
+          } else {
+            $.notify("Silme işlemi başarısız!", "error");
+          }
 
 
           //window.setTimeout(function () { location.reload() }, 600);
@@ -405,8 +402,18 @@
           $.notify("Silme işlemi başarısız", "error");
           $("#deleteConfirm").fadeOut('120000');
         }
+
+      
       });
+
+
+     
+
+    
+
     })
+
+
 
 
     document.getElementsByClassName("form-control")[0].addEventListener('change', changeName);
@@ -421,20 +428,33 @@
         headers: {
           "authorization": "Bearer " + token
         },
-        data: JSON.stringify({ folderId: clickedId, name: newName, status: 1 }),
+        data: JSON.stringify({ folderId: clickedId, name: newName, status: 1, parentId:parentId }),
         contentType: 'application/json',
         success: function (data) {
-          $("#editBtn").addClass('disabled');
-          $.notify("Güncelleme işlemi başarıyla gerçekleştirildi!", "success");
-          $("#dataFile").val = newName;
-          $("#input").fadeOut('120000');
-          // window.setTimeout(function () { location.reload() }, 600)
+          if (data.isSuccess == true) {
+            if (newName.length < 20 && newName != "") {
+              $("#editBtn").addClass('disabled');
+              $.notify("Güncelleme işlemi başarıyla gerçekleştirildi!", "success");
+              $("#dataFile").val = newName;
+              $("#input").fadeOut('120000');
+              listFolder(parentId);
+             
+
+            }
+            else {
+              $.notify("Güncelleme işlemi başarısız!", "error");
+            }
+          }
+          else {
+            $.notify("Güncelleme işlemi başarısız!", "error");
+          }
         },
         error: function (jqXHR, textStatus, errorThrown) {
           $.notify("Güncelleme işlemi gerçekleştirilemedi!", "error");
           $("#input").fadeOut('120000');
         }
       });
+      
     }
 
 
