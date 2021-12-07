@@ -254,7 +254,7 @@
   </div>
 
   
-    <input type="file" class="my-pond" id="files" name="filepond" />
+  <input type="file" class="my-pond" id="files" name="filepond" />
   
 
 
@@ -332,14 +332,14 @@
           "authorization": "Bearer " + token
         },
 
-        data: JSON.stringify({ name: createName}),
+        data: JSON.stringify({ name: createName, parentId:clickedId}),
         contentType: 'application/json',
         success: function (data) {
           if (data.isSuccess == true) {
             //$("#createBtn").addClass('disabled');
             $.notify("Ekleme işlemi başarıyla gerçekleştirildi!", "success");
             $("#createFolder").fadeOut('120000');
-            //listFolder(clickedId);
+            listFolder(clickedId);
           }
 
           else {
@@ -390,6 +390,7 @@
             //$("#deleteBtn").addClass('disabled');
             $.notify("Silme işlemi başarıyla gerçekleştirildi!", "success");
             $("#deleteConfirm").fadeOut('120000');
+            //listFolder(clickedId);
 
           } else {
             $.notify("Silme işlemi başarısız!", "error");
