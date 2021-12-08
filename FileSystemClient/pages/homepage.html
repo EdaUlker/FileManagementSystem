@@ -310,8 +310,6 @@
             createName = e.target.value;
         }
 
-
-
         $("#createBtn").click(function() {
 
             var $form = $(this);
@@ -507,17 +505,12 @@
                             //  var element = document.getElementsByClassName("breadCrumbId")[index+1];
                             //  console.log(element);
                             //  element.remove();   
-
-
                         }
                     });
                 }
                 listFolder(clickedId);
-
             }
-
         }
-
         document.addEventListener('DOMContentLoaded', function() {
             FilePond.registerPlugin(FilePondPluginFileValidateType,
                 FilePondPluginImagePreview,
@@ -567,31 +560,24 @@
                         if (request.status >= 200 && request.status < 300) {
                             load(request.responseText);
                             $.notify("Dosya başarıyla yüklendi.", "success");
+                            //$(".filepond--item").fadeOut(6000);
 
-                            // var uploadFile = file;
+                            var uploadFile = file;
                             // if (file.type = "image/jpeg") {
                             //   //alert('You must select an image file only'); 
                             //   document.getElementById("fileImage").src = "/FileSystemClient/img/image.png";
                             //   
 
                             // }
-
-
-
                             // if (uploadFile.size > 2000000) {
-                            //   $.notify("Dosya yüklenemedi. Dosya 2 MB'dan küçük olmalıdır.", "error");
-                            // }
+                            //    $.notify("Dosya yüklenemedi. Dosya 2 MB'dan küçük olmalıdır.", "error");
+                            //  }
 
                             listFolder(clickedId);
-
-
-
-
-
                         }
 
-                        //var b = document.getElementsByClassName("filepond--file-status-main")[0].outerText;
-                        //var b = $(".filepond--file-status-main").innerHtml;
+                        // var b = document.getElementsByClassName("filepond--file-status-main")[0].outerText;
+                        // var b = $(".filepond--file-status-main").innerHtml;
                         // if (document.getElementsByClassName("filepond--file-status-main")[0] != null) {
                         //   var idPost = document.getElementsByClassName("filepond--file-status-main")[0].innerHTML;
                         //   console.log(idPost);
