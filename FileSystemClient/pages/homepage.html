@@ -172,9 +172,10 @@
 
 
 
-    <div class="row" id="card" style="margin-left: 250px; margin-right:auto">
+    <div class="row" id="card" style="margin-left: 250px; margin-right:10px;">
 
     </div>
+
 
 
     <div id="contextMenu" class="context-menu" style="display: none; position: absolute; ">
@@ -552,29 +553,31 @@
                         progress(e.lengthComputable, e.loaded, e.total);
 
                     };
+                    var uploadFile = file;
+                    if (uploadFile.size <= 4194304) {
+                        request.onload = function() {
+                            if (request.status >= 200 && request.status < 300) {
+                                load(request.responseText);
+                                $.notify("Dosya başarıyla yüklendi.", "success");
+                                $(".filepond--item").fadeOut(6000);
+                                listFolder(clickedId);
+                                // } else {
+                                //     var uploadFile = file;
+                                //     console.log(uploadFile.size);
+                                //     if (uploadFile.size > 4194304) {
+                                //         $.notify("Dosya yüklenemedi. Dosya 4 MB'dan küçük olmalıdır.", "error");
 
-                    request.onload = function() {
-                        if (request.status >= 200 && request.status < 300) {
-                            load(request.responseText);
-                            $.notify("Dosya başarıyla yüklendi.", "success");
-                            $(".filepond--item").fadeOut(6000);
+                                //     }
 
-                            var uploadFile = file;
-                            // if (file.type = "image/jpeg") {
-                            //   //alert('You must select an image file only'); 
-                            //   document.getElementById("fileImage").src = "/FileSystemClient/img/image.png";
-                            //   
 
-                            // }
-                            // if (uploadFile.size > 2000000) {
-                            //    $.notify("Dosya yüklenemedi. Dosya 2 MB'dan küçük olmalıdır.", "error");
-                            //  }
+                            }
 
-                            listFolder(clickedId);
-                        } else {
-                            $.notify('Dosya yüklenirken hata!', "error");
+
                         }
-                    };
+                    } else {
+                        $.notify('Dosya yüklenirken hata! Dosya boyutu 4 MB dan büyük olamaz!', "error");
+
+                    }
                     request.send(formData);
                     return {
                         abort: () => {
@@ -629,7 +632,15 @@
             e.preventDefault()
         }
 
-
+        function getFileSize(fileSize) {
+            if (fileSize < 1000000) {
+                return (fileSize / 1024).toFixed(2) + " KB";
+            } else if (fileSize > 1000000 && fileSize < 1073741824) {
+                return ((fileSize / 1024) / 1024).toFixed(2) + " MB";
+            } else if (fileSize >= 1073741824) {
+                return (((fileSize / 1024) / 1024) / 1024).toFixed(2) + " GB";
+            }
+        }
 
         function listFolder(id) {
             var $form = $(this);
@@ -652,17 +663,17 @@
                             divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder onright" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><br><img id="fileImage" src="/FileSystemClient/img/128.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title text-center onright" id="dataFile">' + data[i].fileName + '</h6></div></div></div>'
                         } else if (data[i].type == "file") {
                             if ((/\.(gif|jpg|jpeg|tiff|png|jfif|psd|ai|bmp|svg)$/i).test(data[i].fileName)) {
-                                divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder onright" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><br><img id="fileImage" src="/FileSystemClient/img/image.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title onright" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6></div></div></div>'
+                                divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder onright" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><br><img id="fileImage" src="/FileSystemClient/img/image.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title onright" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6><br><h6 class="card-title onright" style="text-align:center; font-size:12px;">' + getFileSize(data[i].fileSize) + '</h6></div></div></div>'
                             } else if ((/\.(docx|doc|txt|log|mog|jfm|gpd)$/i).test(data[i].fileName)) {
-                                divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder onright" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><br><img id="fileImage" src="/FileSystemClient/img/text-format.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title onright" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6></div></div></div>'
+                                divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder onright" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><br><img id="fileImage" src="/FileSystemClient/img/text-format.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title onright" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6><br><h6 class="card-title onright" style="text-align:center; font-size:12px;">' + getFileSize(data[i].fileSize) + '</h6></div></div></div>'
                             } else if ((/\.(pdf)$/i).test(data[i].fileName)) {
-                                divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder onright" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><br><img id="fileImage" src="/FileSystemClient/img/pdf.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title onright" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6></div></div></div>'
+                                divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder onright" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><br><img id="fileImage" src="/FileSystemClient/img/pdf.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title onright" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6><br><h6 class="card-title onright" style="text-align:center; font-size:12px;">' + getFileSize(data[i].fileSize) + '</h6></div></div></div>'
                             } else if ((/\.(json)$/i).test(data[i].fileName)) {
-                                divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder onright" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><br><img id="fileImage" src="/FileSystemClient/img/json_64px.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title onright" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6></div></div></div>'
+                                divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder onright" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><br><img id="fileImage" src="/FileSystemClient/img/json_64px.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title onright" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6><br><h6 class="card-title onright" style="text-align:center; font-size:12px;">' + getFileSize(data[i].fileSize) + '</h6></div></div></div>'
                             } else if ((/\.(sln)$/i).test(data[i].fileName)) {
-                                divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder onright" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><br><img id="fileImage" src="/FileSystemClient/img/vs.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title onright" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6></div></div></div>'
+                                divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder onright" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><br><img id="fileImage" src="/FileSystemClient/img/vs.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title onright" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6><br><h6 class = "card-title onright" style="text-align:center; font-size:12px;">' + getFileSize(data[i].fileSize) + '</h6></div></div></div>'
                             } else {
-                                divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder onright" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><br><img id="fileImage" src="/FileSystemClient/img/empty-file.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title onright" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6></div></div></div>'
+                                divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder onright" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><br><img id="fileImage" src="/FileSystemClient/img/empty-file.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title onright" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6><br><h6 class="card-title onright" style="text-align:center; font-size:12px;">' + getFileSize(data[i].fileSize) + '</h6></div></div></div>'
 
                             }
 
