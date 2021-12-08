@@ -428,15 +428,15 @@
                             $("#dataFile").val = newName;
                             $("#input").fadeOut('120000');
                             listFolder(clickedId);
-
-
-                        } else if (newName == "") {
+                        }
+                    } else {
+                        if (newName == "") {
                             $.notify("Güncelleme işlemi başarısız. Klasör ismi boş olamaz!", "error");
                             $("#input").fadeOut('120000');
+                        } else if (newName.length > 20) {
+                            $.notify("Güncelleme işlemi başarısız. Klasör ismi 20 karakterden fazla olamaz!", "error");
+                            $("#input").fadeOut('120000');
                         }
-                    } else if (newName.length > 20) {
-                        $.notify("Güncelleme işlemi başarısız. Klasör ismi 20 karakterden fazla olamaz!", "error");
-                        $("#input").fadeOut('120000');
                     }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
@@ -502,9 +502,6 @@
                         for (var i = 0; i < idList.length; i++) {
                             var b = document.getElementsByClassName("breadCrumbId")[index + 1];
                             b.remove();
-                            //  var element = document.getElementsByClassName("breadCrumbId")[index+1];
-                            //  console.log(element);
-                            //  element.remove();   
                         }
                     });
                 }
@@ -531,7 +528,7 @@
 
 
         FilePond.setOptions({
-            labelIdle: '<div style="width:100vh; height:100%;"><p>Drag &amp; Drop your files or <span class="filepond--label-action" tabindex="0">Browse</span></p></div>',
+            labelIdle: '<div><p>Drag &amp; Drop your files or <span class="filepond--label-action" tabindex="0">Browse</span></p></div>',
             allowDrop: true,
             dropOnPage: true,
             dropOnElement: false,
@@ -560,7 +557,7 @@
                         if (request.status >= 200 && request.status < 300) {
                             load(request.responseText);
                             $.notify("Dosya başarıyla yüklendi.", "success");
-                            //$(".filepond--item").fadeOut(6000);
+                            $(".filepond--item").fadeOut(6000);
 
                             var uploadFile = file;
                             // if (file.type = "image/jpeg") {
@@ -574,21 +571,7 @@
                             //  }
 
                             listFolder(clickedId);
-                        }
-
-                        // var b = document.getElementsByClassName("filepond--file-status-main")[0].outerText;
-                        // var b = $(".filepond--file-status-main").innerHtml;
-                        // if (document.getElementsByClassName("filepond--file-status-main")[0] != null) {
-                        //   var idPost = document.getElementsByClassName("filepond--file-status-main")[0].innerHTML;
-                        //   console.log(idPost);
-                        // }
-                        // console.log(b);
-                        // if(b == "Upload complete"){
-                        //   console.log("bravo");
-                        // }
-                        //   $(".filepond--item").style("height:50px;")
-                        // } 
-                        else {
+                        } else {
                             $.notify('Dosya yüklenirken hata!', "error");
                         }
                     };
@@ -694,21 +677,11 @@
                 error: function(jqXHR, textStatus, errorThrown) {
                     window.location = "/FileSystemClient/pages/login.html";
                 }
-
             });
-
-
         }
-
-
-
-
         if (token != null) {
             $(document).ready(function() {
                 listFolder(0);
-
-
-
             });
         }
     </script>
