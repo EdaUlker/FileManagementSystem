@@ -17,7 +17,12 @@ namespace FileSystemManagement.DAL.Abstract
         TblFolder Add(FolderRequestDTO folder, int userid);
         TblFolder GetOne(int folderId);
 
-        TblFolder UploadFile(FolderUpload folderUpload);
- 
+        TblFolder FolderName(string filename, int userid);
+
+        TblFolder UploadFile(FolderUpload folderUpload, int userid);
+
+        int FileName(string filename, int userid);
+
+
     }
 }

@@ -30,26 +30,6 @@ namespace FileSystemManagement.API.Controllers
             folderService = new FolderService();
         }
 
-        //[HttpPost]
-        //[Authorize]
-        //public FolderResponseDTO CreateFolder(FolderRequestDTO folder)
-        //{
-        //    var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
-        //    var username = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email).Value;
-        //    //folder.UserId = Convert.ToInt32(userId);
-        //    var folderDTO = folderService.CreateFolder(folder, username);
-        //    var folderid = folderDTO.FolderId;
-        //    var path = GetParentFileName(folderid);
-        //    var fullPath = "C:\\FileManagement\\" + username + "\\" + path;
-        //    string path2 = Path.Combine(fullPath + folder.Name);
-        //    Directory.CreateDirectory(path2);
-
-
-
-        //    return folderDTO;
-
-        //}
-
 
         [HttpPost]
         [Authorize]
@@ -61,7 +41,7 @@ namespace FileSystemManagement.API.Controllers
             serviceResult = folderService.CreateFolder(folder,Convert.ToInt32(userid));
             if (serviceResult.IsSuccess)
             {
-                var path = GetParentFileName((int)folder.ParentId);
+                var path = GetParentFileName((int?)folder.ParentId);
                 var fullPath = "C:\\FileManagement\\" + username + "\\" + path;
                 string path2 = Path.Combine(fullPath + folder.Name);
                 Directory.CreateDirectory(path2);
@@ -77,8 +57,6 @@ namespace FileSystemManagement.API.Controllers
             var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
             var folderDTO = folderService.ListAll(folder,Convert.ToInt32(userId));
             return folderDTO;
-
- 
         }
 
 
@@ -87,8 +65,11 @@ namespace FileSystemManagement.API.Controllers
         public ServiceResult UploadFile([FromForm] FolderUpload folderUpload)
         {
             var username = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email).Value;
+            var userid = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
             ServiceResult serviceResult = new ServiceResult();
-            serviceResult = folderService.UploadFile(folderUpload);
+
+            serviceResult = folderService.UploadFile(folderUpload, Convert.ToInt32(userid));
+            var abc = Request.Form.Files;
             if (serviceResult.IsSuccess)
             {
                 string name = folderUpload.FileName;
@@ -104,20 +85,20 @@ namespace FileSystemManagement.API.Controllers
                         image.CopyTo(fileStream);
                     }
                 }
+
             }
-           
+
             return serviceResult;
         }
 
 
 
-
-        private string GetParentFileName(int id)
+        private string GetParentFileName(int? id)
         {
             var username = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email).Value;
-            var folder = folderService.GetListById(id);
+            var folder = folderService.GetListById((int)id);
             string path = folder.FileName + "\\";
-            while (folder.ParentId != null)
+            if (folder.ParentId != null)
             {
                 folder = folderService.GetListById((int)folder.ParentId);
                 path = folder.FileName + "\\" + path;
@@ -129,13 +110,25 @@ namespace FileSystemManagement.API.Controllers
 
         [HttpPost]
         [Authorize]
-        public FolderResponseDTO UpdateFolder(FolderRequestDTO folderRequest)
+        public ServiceResult UpdateFolder(FolderRequestDTO folderRequest)
         {
-            //var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            //folderRequest.UserId = Convert.ToInt32(userId);
-            
             var folderDTO = folderService.UpdateFolder(folderRequest);
             return folderDTO;
+        }
+
+
+
+        [HttpPost]
+        [Authorize]
+        public ServiceResult DeleteFolder(FolderRequestDTO folderRequestDTO)
+        {
+            var username = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email).Value;
+            var userid = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
+            ServiceResult serviceResult = new ServiceResult();
+            var folderDTO = folderService.DeleteFolder(folderRequestDTO);
+            return folderDTO;
+
+
         }
     }
 }
