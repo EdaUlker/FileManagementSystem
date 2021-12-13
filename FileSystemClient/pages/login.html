@@ -110,7 +110,7 @@
                 contentType: 'application/json',
                 success: function(response) {
                     if (response.isSuccess) {
-                        window.location = "homepage.html"
+                        window.location = "homepage.html";
                         localStorage.setItem("token", response.data.token);
                         localStorage.setItem("username", response.data.username)
                     } else {
