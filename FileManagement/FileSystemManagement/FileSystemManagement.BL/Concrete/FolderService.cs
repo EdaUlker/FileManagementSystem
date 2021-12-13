@@ -45,31 +45,46 @@ namespace FileSystemManagement.BL
             }
             else
             {
-                var folder = _folder.Add(folderRequest, userid);
-
-
-                if (folder == null)
-                {
-                    foreach (var failure in result.Errors)
-                    {
-                        loginMessage = new ServiceResult()
-                        {
-                            StatusCode = 400,
-                            IsSuccess = false,
-                            Message = failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage,
-                        };
-                    }
-
-                }
-                else
+                var foldernameControl = _folder.FolderName(folderRequest.Name, userid);
+                if (foldernameControl != null)
                 {
                     loginMessage = new ServiceResult()
                     {
-                        StatusCode = 200,
-                        IsSuccess = true,
-                        Message = "Operation Succesful",
+                        StatusCode = 400,
+                        IsSuccess = false,
+                        Message = "Aynı isimli dosya zaten var.",
+
                     };
                 }
+                else
+                {
+                    var folder = _folder.Add(folderRequest, userid);
+
+
+                    if (folder == null)
+                    {
+                        foreach (var failure in result.Errors)
+                        {
+                            loginMessage = new ServiceResult()
+                            {
+                                StatusCode = 400,
+                                IsSuccess = false,
+                                Message = failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage,
+                            };
+                        }
+
+                    }
+                    else
+                    {
+                        loginMessage = new ServiceResult()
+                        {
+                            StatusCode = 200,
+                            IsSuccess = true,
+                            Message = "Operation Succesful",
+                        };
+                    }
+                }
+
             }
 
 
@@ -94,7 +109,7 @@ namespace FileSystemManagement.BL
                 };
             }
 
-            if (folderRequest.FolderId != null)
+            else
             {
                 var folder = _folder.Update(folderRequest);
 
@@ -111,6 +126,7 @@ namespace FileSystemManagement.BL
                 }
                 else
                 {
+               
                     loginMessage = new ServiceResult()
                     {
                         StatusCode = 200,
@@ -125,15 +141,15 @@ namespace FileSystemManagement.BL
         }
 
 
-        public FolderResponseDTO GetListById(int id)
+        public FolderResponseDTO GetListById(int? id)
         {
             FolderResponseDTO folderResponseDTO = new FolderResponseDTO();
             if (id != null)
             {
-                var folder = _folder.GetOne(id);
-                folderResponseDTO.FolderId = folder.FolderId;
-                folderResponseDTO.ParentId = folder.ParentId;
-                folderResponseDTO.FileName = folder.FileName;
+                var folder = _folder.GetOne((int)id);
+                //folderResponseDTO.FolderId = folder.FolderId;
+                //folderResponseDTO.ParentId = folder.ParentId;
+                //folderResponseDTO.FileName = folder.FileName;
             }
             return folderResponseDTO;
         }
@@ -148,50 +164,47 @@ namespace FileSystemManagement.BL
 
             foreach(var item in responseList)
             {
-                FolderResponseDTO dto = new FolderResponseDTO();
-              
-                dto.FileName = item.FileName;
-                dto.FileSize = (int)item.FolderSize;
-                dto.FolderId = item.FolderId;
-                dto.ParentId = item.ParentId;
-                dto.Status = (byte)item.Status;
-                list.Add(dto);
-            }
-            
-            return list;
-        }
+                if(item.Status == 1)
+                {
+                    FolderResponseDTO dto = new FolderResponseDTO();
 
+                    dto.FileName = item.FileName;
+                    dto.FileSize = (int)item.FolderSize;
+                    dto.FolderId = item.FolderId;
+                    dto.ParentId = item.ParentId;
+                    dto.Status = (byte)item.Status;
+                    dto.Type = item.Type;
+                    
+                    list.Add(dto);
+                }
 
-        public FolderResponseDTO UpdateFolder(FolderRequestDTO folderRequest)
-        {
-            if (!string.IsNullOrEmpty(folderRequest.Name))
-            {
-                var folder = _folder.Update(folderRequest);
-                FolderResponseDTO folderResponseDTO = new FolderResponseDTO();
-                folderResponseDTO.Status = (byte)folder.Status;
-                return folderResponseDTO;
             }
 
-            return null;
+            return list.OrderByDescending(x=>x.Type).ToList();
+
+          
         }
 
-        public ServiceResult UploadFile(FolderUpload folderUpload)
+   
+
+        public ServiceResult UpdateFolder(FolderRequestDTO folderRequest)
         {
             ServiceResult serviceResult = new ServiceResult();
-            if (folderUpload.FormFile == null)
+
+            if(folderRequest.FolderId == null || folderRequest.Name == "")
             {
                 serviceResult = new ServiceResult()
                 {
                     StatusCode = 400,
                     IsSuccess = false,
-                    Message = "Invalid file",
+                    Message = "Invalid folder id",
 
                 };
             }
 
-            if (folderUpload.FormFile != null)
+            else
             {
-                var folder = _folder.UploadFile(folderUpload);
+                var folder = _folder.Update(folderRequest);
 
 
                 if (folder == null)
@@ -200,7 +213,7 @@ namespace FileSystemManagement.BL
                     {
                         StatusCode = 400,
                         IsSuccess = false,
-                        Message = "Invalid file",
+                        Message = "Invalid folder id",
 
                     };
                 }
@@ -212,6 +225,94 @@ namespace FileSystemManagement.BL
                         IsSuccess = true,
                         Message = "Operation Succesful",
 
+                    };
+                }
+            }
+
+            return serviceResult;
+
+        }
+
+
+        //public FolderResponseDTO UpdateFolder(FolderRequestDTO folderRequest)
+        //{
+        //    FolderResponseDTO folderResponseDTO = new FolderResponseDTO();
+        //    if (!string.IsNullOrEmpty(folderRequest.Name))
+        //    {
+        //        var folder = _folder.Update(folderRequest);
+        //        folderResponseDTO.Status = (byte)folder.Status;
+        //        return folderResponseDTO;
+        //    }
+
+
+        //    return folderResponseDTO;
+        //}
+
+
+
+
+        public ServiceResult UploadFile(FolderUpload folderUpload, int userid)
+        {
+            ServiceResult serviceResult = new ServiceResult();
+            if (folderUpload.FormFile == null)
+            {
+                serviceResult = new ServiceResult()
+                {
+                    StatusCode = 400,
+                    IsSuccess = false,
+                    Message = "Invalid file",
+                };
+            }
+
+
+            else
+            {
+
+                int count = 1;
+                string fileNameOnly = Path.GetFileNameWithoutExtension(folderUpload.FileName);
+                string extension = Path.GetExtension(folderUpload.FileName);
+                string newFullPath = folderUpload.FileName;
+    
+                if(_folder.CheckFileName(newFullPath, userid) != null)
+                {
+                    do
+                    {
+                        string tempFileName = string.Format("{0}({1})", fileNameOnly, count++);
+                        folderUpload.FileName = tempFileName + extension;
+                    } while (_folder.CheckFileName(folderUpload.FileName, userid) != null);
+                }
+               
+
+
+
+                var folder = _folder.UploadFile(folderUpload, userid);
+
+
+                if (folder == null)
+                {
+                    serviceResult = new ServiceResult()
+                    {
+                        StatusCode = 400,
+                        IsSuccess = false,
+                        Message = "Invalid file",
+                    };
+                }
+                else if (folder.FolderSize > 4194304)
+                {
+                    serviceResult = new ServiceResult()
+                    {
+                        StatusCode = 400,
+                        IsSuccess = false,
+                        Message = "Invalid file",
+                    };
+                }
+                else
+                {
+                    serviceResult = new ServiceResult()
+                    {
+                        StatusCode = 200,
+                        IsSuccess = true,
+                        Message = "Operation Succesful",
                     };
                 }
             }

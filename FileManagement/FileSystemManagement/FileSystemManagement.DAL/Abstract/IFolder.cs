@@ -21,7 +21,7 @@ namespace FileSystemManagement.DAL.Abstract
 
         TblFolder UploadFile(FolderUpload folderUpload, int userid);
 
-        int FileName(string filename, int userid);
+        TblFolder CheckFileName(string filename, int userid);
 
 
     }

@@ -55,15 +55,13 @@ namespace FileSystemManagement.DAL.Repositories
             return info;
         }
 
-
-        public int FileName(string filename, int userid)
+        public TblFolder CheckFileName(string filename,int userid)
         {
-            //var info = _context.TblFolders.FirstOrDefault(x => x.FileName == filename && x.UserId == userid && x.Type == "file" && x.Status == 1);*/
-            var count = _context.TblFolders.Count(x => x.FileName == filename && x.UserId == userid && x.Type == "file" && x.Status == 1);
-            return count;
-            
-            //return info;
+            var info = _context.TblFolders.FirstOrDefault(x => x.FileName == filename && x.UserId == userid && x.Type == "file" && x.Status == 1);
+            return info;
         }
+
+
 
         public List<TblFolder> GetAll(FolderRequestDTO folder,int userid)
         {
@@ -82,7 +80,7 @@ namespace FileSystemManagement.DAL.Repositories
             if (folder.FolderId!=null)
             {
                 tblFolder.Status = folder.Status;
-                if(folder.Name != "")
+                if(folder.Name != null)
                 {
                     tblFolder.FileName = folder.Name;
                 }         
