@@ -49,7 +49,7 @@ namespace FileSystemManagement.BL
                     {
                         StatusCode = 400,
                         IsSuccess = false,
-                        Message = failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage,
+                        Message = failure.ErrorMessage,
                         Data = new LoginResponseDTO()
                         {
 
@@ -71,7 +71,7 @@ namespace FileSystemManagement.BL
                         {
                             StatusCode = 400,
                             IsSuccess = false,
-                            Message = failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage,
+                            Message = failure.ErrorMessage,
                             Data = new LoginResponseDTO()
                             {
 
@@ -115,7 +115,7 @@ namespace FileSystemManagement.BL
                     {
                         StatusCode = 400,
                         IsSuccess = false,
-                        Message = failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage
+                        Message = failure.ErrorMessage
                      
                     };
                 }
@@ -124,6 +124,7 @@ namespace FileSystemManagement.BL
             else
             {
                 var usernameControl = _user.Username(registerRequest.Username);
+                var emailControl = _user.Email(registerRequest.Email);
                 if (usernameControl != null)
                 {
                     registerMessage = new ServiceResult()
@@ -134,58 +135,71 @@ namespace FileSystemManagement.BL
 
                     };
                 }
+             
                 else
                 {
+                    if(emailControl == null)
+                    {
+                        BasicHttpsBinding binding = new BasicHttpsBinding();
+                        EndpointAddress address = new EndpointAddress("https://tckimlik.nvi.gov.tr/Service/KPSPublic.asmx");
 
-                    BasicHttpsBinding binding = new BasicHttpsBinding();
-                    EndpointAddress address = new EndpointAddress("https://tckimlik.nvi.gov.tr/Service/KPSPublic.asmx");
+                        long Tc = (long)registerRequest.TC;
+                        string name = registerRequest.Name.ToUpper();
+                        string surname = registerRequest.Surname.ToUpper();
+                        int birthday = registerRequest.Birthday.Year;
 
-                    long Tc = (long)registerRequest.TC;
-                    string name = registerRequest.Name.ToUpper();
-                    string surname = registerRequest.Surname.ToUpper();
-                    int birthday = registerRequest.Birthday.Year;
+                        TCKimlik.KPSPublicSoapClient kPSPublicSoap = new KPSPublicSoapClient(binding, address);
+                        bool status = kPSPublicSoap.TCKimlikNoDogrula(Tc, name, surname, birthday);
 
-                    TCKimlik.KPSPublicSoapClient kPSPublicSoap = new KPSPublicSoapClient(binding, address);
-                    bool status = kPSPublicSoap.TCKimlikNoDogrula(Tc, name, surname, birthday);
+                        if (!status)
+                        {
+                            registerMessage = new ServiceResult()
+                            {
+                                StatusCode = 400,
+                                IsSuccess = false,
+                                Message = "Kimlik bilgileri yanlış",
+                            };
+                        }
+                        else
+                        {
+                            var user = _user.Register(registerRequest);
 
-                    if (!status)
+                            if (user == null)
+                            {
+                                foreach (var failure in result.Errors)
+                                {
+                                    registerMessage = new ServiceResult()
+                                    {
+                                        StatusCode = 400,
+                                        IsSuccess = false,
+                                        Message = failure.ErrorMessage,
+
+                                    };
+                                }
+
+                            }
+                            else
+                            {
+                                registerMessage = new ServiceResult()
+                                {
+                                    StatusCode = 200,
+                                    IsSuccess = true,
+                                    Message = "Operation Succesful",
+
+                                };
+                            }
+                        }
+                    }
+                    else
                     {
                         registerMessage = new ServiceResult()
                         {
                             StatusCode = 400,
                             IsSuccess = false,
-                            Message = "Kimlik bilgileri yanlış",
+                            Message = "Email zaten kayıtlı",
                         };
                     }
-                    else
-                    {
-                        var user = _user.Register(registerRequest);
-
-                        if (user == null)
-                        {
-                            foreach (var failure in result.Errors)
-                            {
-                                registerMessage = new ServiceResult()
-                                {
-                                    StatusCode = 400,
-                                    IsSuccess = false,
-                                    Message = failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage,
-
-                                };
-                            }
-
-                        }
-                        else
-                        {
-                            registerMessage = new ServiceResult()
-                            {
-                                StatusCode = 200,
-                                IsSuccess = true,
-                                Message = "Operation Succesful",
-
-                            };
-                        }
-                    }               
+                               
                 }                              
                 }
             return registerMessage;
@@ -205,7 +219,7 @@ namespace FileSystemManagement.BL
                     {
                         StatusCode = 400,
                         IsSuccess = false,
-                        Message = failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage
+                        Message = "Geçersiz Email!",
 
                     };
                 }
@@ -234,7 +248,7 @@ namespace FileSystemManagement.BL
                     var codeConfirm = _user.CreateCode(number, emailControl.Email);
                     if(codeConfirm != null)
                     {
-                        string url = $"http://localhost:54057/ChangePassword?ActivationCode={number}";
+                        string url = $"http://127.0.0.1:5500/FileSystemClient/pages/changepassword.html?ActivationCode={number}";
 
                         email.Body = new TextPart(TextFormat.Html) { Text = "<h3>Şifrenizi sıfırlamak için linke tıklayınız:</h3>" + $"<a href= {url}>Link</a>" };
 
@@ -250,9 +264,22 @@ namespace FileSystemManagement.BL
                         {
                             StatusCode = 400,
                             IsSuccess = false,
-                            Message = "Hatalı",
+                            Message = "Geçersiz Email!"
+
                         };
+
                     }
+
+                }
+                else
+                {
+                    serviceResult = new ServiceResult()
+                    {
+                        StatusCode = 400,
+                        IsSuccess = false,
+                        Message = "Geçersiz Email!"
+
+                    };
 
                 }
             }
@@ -308,7 +335,7 @@ namespace FileSystemManagement.BL
                     {
                         StatusCode = 400,
                         IsSuccess = false,
-                        Message = failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage
+                        Message = failure.ErrorMessage
 
                     };
                 }

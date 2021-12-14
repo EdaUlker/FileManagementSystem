@@ -13,10 +13,10 @@ namespace FileSystemManagement.BL.Validation
     {
         public UserValidator()
         {
-            RuleFor(x => x.Username).MinimumLength(5).WithMessage("Kullanıcı adı en az 5 karakter olmalıdır.").MaximumLength(50).WithMessage("Kullanıcı adı en fazla 50 karakter olmalıdır.").NotEmpty();
+            RuleFor(x => x.Username).MinimumLength(5).WithMessage("Geçersiz kullanıcı adı ya da şifre!").MaximumLength(20).WithMessage("Geçersiz kullanıcı adı ya da şifre!").NotEmpty().WithMessage("Kullanıcı adı alanı boş geçilemez!");
 
 
-            RuleFor(x => x.Password).MinimumLength(3).WithMessage("Şifre en az 3 karakter olmalıdır.").MaximumLength(50).WithMessage("Şifre en fazla 50 karakter olmalıdır.").NotEmpty();
+            RuleFor(x => x.Password).MinimumLength(3).WithMessage("Geçersiz kullanıcı adı ya da şifre!").MaximumLength(20).WithMessage("Geçersiz kullanıcı adı ya da şifre!").NotEmpty().WithMessage("Şifre alanı boş geçilemez!");
 
             //Must(IsPasswordValid).WithMessage("Şifre en az 1 harf ve 1 sayı içermelidir.");        
             //RuleFor(x => x.Name).MinimumLength(3).WithMessage("İsim en az 3 karakter olamlıdır.").MaximumLength(20).WithMessage("İsim en fazla 20 karakter olmalıdır.");
@@ -38,15 +38,15 @@ namespace FileSystemManagement.BL.Validation
     {
         public RegisterValidator()
         {
-            RuleFor(x => x.Username).MinimumLength(5).WithMessage("Kullanıcı adı en az 5 karakter olmalıdır.").MaximumLength(50).WithMessage("Kullanıcı adı en fazla 50 karakter olmalıdır.").NotEmpty();
+            RuleFor(x => x.Username).MinimumLength(5).MaximumLength(50).WithMessage("Kullanıcı adı en fazla 50 karakter olmalıdır.").NotEmpty().WithMessage("Kullanıcı adı alanı boş geçilemez.");
 
 
-            RuleFor(x => x.Password).MinimumLength(3).WithMessage("Şifre en az 3 karakter olmalıdır.").MaximumLength(50).WithMessage("Şifre en fazla 50 karakter olmalıdır.").NotEmpty();
+            RuleFor(x => x.Password).MinimumLength(3).MaximumLength(50).WithMessage("Şifre en fazla 50 karakter olmalıdır.").NotEmpty().WithMessage("Şifre alanı boş geçilemez.");
 
             //Must(IsPasswordValid).WithMessage("Şifre en az 1 harf ve 1 sayı içermelidir.");        
-            RuleFor(x => x.Name).MinimumLength(3).WithMessage("İsim en az 3 karakter olamlıdır.").MaximumLength(20).WithMessage("İsim en fazla 20 karakter olmalıdır.");
+            RuleFor(x => x.Name).MinimumLength(3).MaximumLength(20).WithMessage("İsim en fazla 20 karakter olmalıdır.").NotEmpty().WithMessage("İsim alanı boş geçilemez.");
 
-            RuleFor(x => x.Surname).MinimumLength(3).WithMessage("Soyisim en az 3 karakter olmalıdır.").MaximumLength(25).WithMessage("Soyisim en fazla 25 karakter olmalıdır.");
+            RuleFor(x => x.Surname).MinimumLength(3).MaximumLength(25).WithMessage("Soyisim en fazla 25 karakter olmalıdır.").NotEmpty().WithMessage("Soyisim alanı boş geçilemez."); ;
             RuleFor(x => x.Birthday).LessThanOrEqualTo(x => DateTime.Now).WithMessage("Geçersiz doğum tarihi.");
         }
 

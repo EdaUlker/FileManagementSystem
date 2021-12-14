@@ -27,6 +27,7 @@ namespace FileSystemManagement.DAL.Repositories
             tblUser.Username = registerDTO.Username;
             tblUser.Password = registerDTO.Password;
             tblUser.Birthday = registerDTO.Birthday;
+            tblUser.Email = registerDTO.Email;
             context.TblUsers.Add(tblUser);
             context.SaveChanges();
             return tblUser;
