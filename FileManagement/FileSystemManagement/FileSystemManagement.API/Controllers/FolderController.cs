@@ -54,6 +54,9 @@ namespace FileSystemManagement.API.Controllers
         }
 
 
+
+
+
         [HttpGet("{folderid}")]
         [Authorize]
         public IActionResult DownloadFile(int folderid)
@@ -67,10 +70,14 @@ namespace FileSystemManagement.API.Controllers
             string path2 = Path.Combine(fullPath + fileName);
             byte[] fileBytes = System.IO.File.ReadAllBytes(path2);
             return File(fileBytes, "application/octet-stream", fileName);
-
-
- 
         }
+
+
+
+
+
+
+
 
 
         //[HttpGet]
@@ -86,7 +93,7 @@ namespace FileSystemManagement.API.Controllers
         //    var path = GetParentFileName(parentId);
         //    var fullPath = "C:\\FileManagement\\" + username + path;
         //    string path2 = Path.Combine(fullPath + filename);
-  
+
         //    serviceResult = folderService.DownloadFile(filename, folderId, parentId, Convert.ToInt32(userid));
 
 
@@ -103,7 +110,7 @@ namespace FileSystemManagement.API.Controllers
         //        stream.Close();
 
         //    }
-          
+
         //    return serviceResult;
         //}
 
@@ -175,9 +182,15 @@ namespace FileSystemManagement.API.Controllers
         [HttpPost]
         [Authorize]
         public ServiceResult UpdateFolder(FolderRequestDTO folderRequest)
-        {
-            var folderDTO = folderService.UpdateFolder(folderRequest);
-            return folderDTO;
+         {
+            ServiceResult serviceResult = new ServiceResult();
+            var userid = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
+            serviceResult = folderService.UpdateFolder(folderRequest);
+            if (serviceResult.IsSuccess)
+            {
+                return serviceResult;
+            }
+            return serviceResult;
         }
 
 

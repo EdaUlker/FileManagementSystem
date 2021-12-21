@@ -174,8 +174,10 @@
 
     <div class="row" id="card" style="margin-left: 250px; margin-right:10px;">
 
+
     </div>
 
+    <input type="file" class="my-pond" id="files" name="filepond" />
 
 
     <div id="contextMenu" class="context-menu" style="display: none; position: absolute; ">
@@ -199,7 +201,7 @@
                     <input type="text" class="form-control" id="fileName" name="inputFile">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="editBtn" class="btn btn-success">Değişiklikleri Kaydet</button>
+                    <button type="button" id="editBtn" class="btn btn-dark">Değişiklikleri Kaydet</button>
                 </div>
             </div>
         </div>
@@ -219,7 +221,7 @@
                     <input type="text" class="form-control" id="createName" name="inputFile">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="createBtn" class="btn btn-success folderText">Dosya Oluştur</button>
+                    <button type="button" id="createBtn" class="btn btn-dark folderText">Dosya Oluştur</button>
                 </div>
             </div>
         </div>
@@ -240,14 +242,14 @@
                     <h5>Silinen dosyalar geri alınamaz.</h5>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="deleteBtn" class="btn btn-success">Onayla</button>
+                    <button type="button" id="deleteBtn" class="btn btn-dark">Onayla</button>
                 </div>
             </div>
         </div>
     </div>
 
 
-    <input type="file" class="my-pond" id="files" name="filepond" />
+
 
 
 
@@ -332,7 +334,7 @@
                 contentType: 'application/json',
                 success: function(data) {
                     if (data.isSuccess == true) {
-                        console.log(parentId);
+                        //console.log(parentId);
                         //$("#createBtn").addClass('disabled');
                         $.notify("Ekleme işlemi başarıyla gerçekleştirildi!", "success");
                         $("#createFolder").fadeOut('120000');
@@ -341,7 +343,8 @@
                         if (createName != "") {
                             $.notify("Aynı adlı klasör zaten var!", "error");
                             $("#createFolder").fadeOut('120000');
-                        } else if (createName == "") {
+                        }
+                        if (createName == "") {
                             $.notify("Ekleme işlemi gerçekleştirilemedi. İsim alanı boş geçilemez!", "error");
                             $("#createFolder").fadeOut('120000');
                         } else if (createName.length > 20) {
@@ -409,16 +412,17 @@
             $.ajax({
                 url: url,
                 type: "get",
+                xhrFields: {
+                    responseType: 'blob'
+                },
                 headers: {
                     "authorization": "Bearer " + token,
                 },
-                // data: JSON.stringify({
-                //     folderId: parentId
-                // }),
                 success: function(data) {
                     var blob = new Blob([data], {
                         type: 'application/octet-stream'
                     });
+                    console.log(blob);
                     if (blob != null) {
                         console.log(blob);
                         var a = document.createElement('a');
@@ -430,43 +434,14 @@
                         a.remove();
                         window.URL.revokeObjectURL(url);
                     } else {
-                        console.log("asdsd");
+                        $.notify("İndirme işlemi başarısız.", "error");
                     }
 
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
-                    console.log(parentId);
+                    $.notify("İndirme işlemi başarısız!", "error");
                 }
             });
-
-            // $.ajax({
-            //     url: url,
-            //     type: 'get',
-            //     responseType: 'blob',
-            //     headers: {
-            //         "authorization": "Bearer " + token,
-            //     },
-            //     data: JSON.stringify({
-            //         folderId: parentId,
-            //         parentId: clickedId,
-
-            //     }),
-            //     success: function(data) {
-            //         //console.log(data);
-            //         var blob = new Blob([data]);
-            //         console.log(blob);
-            //         alert("success");
-            //     },
-            //     error: function(jqXHR, textStatus, errorThrown) {
-            //         console.log(clickedId);
-
-            //         alert("error");
-
-            //     }
-
-
-            // });
-            // //listFolder(parentId);
         })
 
 
@@ -492,16 +467,24 @@
                 }),
                 contentType: 'application/json',
                 success: function(data) {
+                    var regex = /[-[/\]{}()=*+?.,\\^$|#\s]/g
+
+                    console.log(regex.test(newName));
                     if (data.isSuccess == true) {
-                        if (newName.length < 20 && newName != "") {
+                        //console.log(reg);
+                        if (newName.length < 20 && newName != "" && regex.test(newName) == false) {
                             //$("#editBtn").addClass('disabled');
                             $.notify("Güncelleme işlemi başarıyla gerçekleştirildi!", "success");
                             $("#dataFile").val = newName;
                             $("#input").fadeOut('120000');
                             listFolder(clickedId);
                         }
+
+
                     } else {
-                        if (newName == "") {
+                        if (regex.test(newName) == true) {
+                            $.notify("Güncelleme işlemi başarısız. Klasör isimleri özel karakter içemez.", "error");
+                        } else if (newName == "") {
                             $.notify("Güncelleme işlemi başarısız. Klasör ismi boş olamaz!", "error");
                             $("#input").fadeOut('120000');
                         } else if (newName.length > 20) {
@@ -603,13 +586,15 @@
             allowDrop: true,
             dropOnPage: true,
             dropOnElement: false,
+            headers: {
+                "Content-Type": "application/offset+octet-stream"
+            },
             server: {
                 processData: false,
                 contentType: false,
                 withCredentials: false,
-                // headers: {
-                //         "accept": "application/json;odata=verbose",
-                //       },
+
+
                 process: (fieldName, file, metadata, load, error, progress, abort) => {
                     const formData = new FormData();
                     formData.append('FileName', file.name);
@@ -676,6 +661,7 @@
                 let menuBlock = document.getElementsByClassName("activeMenu")[0];
                 menuBlock.style.display = 'block';
                 document.getElementsByClassName("deleteFolder")[0].style.display = 'block';
+                document.getElementsByClassName("downloadFolder")[0].style.display = 'block';
                 document.getElementsByClassName("newFolder")[0].text = "Yeni Dosya";
                 document.getElementsByClassName("folderText")[0].innerText = "Dosya Oluştur";
                 document.getElementsByClassName("modal-title")[1].innerText = "Yeni Dosya";
@@ -683,6 +669,7 @@
                 let menuNone = document.getElementsByClassName("activeMenu")[0];
                 menuNone.style.display = 'none';
                 document.getElementsByClassName("deleteFolder")[0].style.display = 'none';
+                document.getElementsByClassName("downloadFolder")[0].style.display = 'none';
                 document.getElementsByClassName("newFolder")[0].text = "Yeni Klasör";
                 document.getElementsByClassName("folderText")[0].innerText = "Klasör Oluştur";
                 document.getElementsByClassName("modal-title")[1].innerText = "Yeni Klasör";

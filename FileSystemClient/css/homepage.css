@@ -1380,7 +1380,7 @@ li .filepond-item {
     /* layout*/
     box-sizing: border-box;
     position: relative;
-    margin-bottom: 1em;
+    margin-bottom: 15em;
     /* base font size for whole component */
     font-size: 1rem;
     /* base line height */
@@ -1435,7 +1435,7 @@ li .filepond-item {
 
 .filepond--drop-label div {
     margin-top: 50px;
-    margin-left: -2em;
+    margin-left: 2em;
 }
 
 .filepond--root .filepond--drop-label {
