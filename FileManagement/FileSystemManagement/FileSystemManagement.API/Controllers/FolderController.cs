@@ -10,6 +10,10 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net.Mime;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -20,11 +24,11 @@ namespace FileSystemManagement.API.Controllers
     [Route("[controller]/[action]")]
     [ApiController]
 
-  
+
     public class FolderController : ControllerBase
     {
         IFolderManager folderService;
-   
+
         public FolderController()
         {
             folderService = new FolderService();
@@ -38,7 +42,7 @@ namespace FileSystemManagement.API.Controllers
             ServiceResult serviceResult = new ServiceResult();
             var userid = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
             var username = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email).Value;
-            serviceResult = folderService.CreateFolder(folder,Convert.ToInt32(userid));
+            serviceResult = folderService.CreateFolder(folder, Convert.ToInt32(userid));
             if (serviceResult.IsSuccess)
             {
                 var path = GetParentFileName((int?)folder.ParentId);
@@ -48,6 +52,60 @@ namespace FileSystemManagement.API.Controllers
             }
             return serviceResult;
         }
+
+
+        [HttpGet("{folderid}")]
+        [Authorize]
+        public IActionResult DownloadFile(int folderid)
+        {
+            var userid = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
+            var username = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email).Value;
+            var fileName = GetFileNameAndParentId(folderid).FileName;
+            int parentId = (int)GetFileNameAndParentId(folderid).ParentId;
+            var path = GetParentFileName(parentId);
+            var fullPath = "C:\\FileManagement\\" + username + path;
+            string path2 = Path.Combine(fullPath + fileName);
+            byte[] fileBytes = System.IO.File.ReadAllBytes(path2);
+            return File(fileBytes, "application/octet-stream", fileName);
+
+
+ 
+        }
+
+
+        //[HttpGet]
+        //[Authorize]
+        //public ServiceResult Download(string filename, int folderId, int parentId)
+        //{
+        //    var request = Request.ContentLength; 
+        //    ServiceResult serviceResult = new ServiceResult();
+        //    HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
+        //    var userid = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
+        //    var username = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email).Value;
+
+        //    var path = GetParentFileName(parentId);
+        //    var fullPath = "C:\\FileManagement\\" + username + path;
+        //    string path2 = Path.Combine(fullPath + filename);
+  
+        //    serviceResult = folderService.DownloadFile(filename, folderId, parentId, Convert.ToInt32(userid));
+
+
+        //    if (serviceResult.IsSuccess)
+        //    {
+        //        var stream = new FileStream(path2, FileMode.Open, FileAccess.Read);
+        //        result.Content = new StreamContent(stream);
+        //        result.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
+        //        {
+        //            FileName = filename
+
+        //        };
+        //        result.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+        //        stream.Close();
+
+        //    }
+          
+        //    return serviceResult;
+        //}
 
 
         [HttpPost]
@@ -67,7 +125,6 @@ namespace FileSystemManagement.API.Controllers
             var username = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email).Value;
             var userid = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
             ServiceResult serviceResult = new ServiceResult();
-
             serviceResult = folderService.UploadFile(folderUpload, Convert.ToInt32(userid));
             var abc = Request.Form.Files;
             if (serviceResult.IsSuccess)
@@ -104,6 +161,13 @@ namespace FileSystemManagement.API.Controllers
                 path = folder.FileName + "\\" + path;
             }
             return path;
+        }
+
+
+        private FolderResponseDTO GetFileNameAndParentId(int id)
+        {
+            var folder = folderService.GetFileNameAndParentId(id);
+            return folder;
         }
 
 

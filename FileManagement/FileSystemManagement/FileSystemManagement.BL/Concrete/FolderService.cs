@@ -91,7 +91,17 @@ namespace FileSystemManagement.BL
             return loginMessage;
         }
 
-    
+
+        public FolderResponseDTO GetFileNameAndParentId(int id)
+        {
+            FolderResponseDTO folderResponseDTO = new FolderResponseDTO();
+            var folder = _folder.GetOne(id);
+            folderResponseDTO.FileName = folder.FileName;
+            folderResponseDTO.ParentId = folder.ParentId;
+            return folderResponseDTO;
+
+        }          
+   
 
 
         public ServiceResult DeleteFolder(FolderRequestDTO folderRequest)
@@ -141,6 +151,7 @@ namespace FileSystemManagement.BL
         }
 
 
+
         public FolderResponseDTO GetListById(int? id)
         {
             FolderResponseDTO folderResponseDTO = new FolderResponseDTO();
@@ -150,9 +161,19 @@ namespace FileSystemManagement.BL
                 //folderResponseDTO.FolderId = folder.FolderId;
                 //folderResponseDTO.ParentId = folder.ParentId;
                 //folderResponseDTO.FileName = folder.FileName;
+                
             }
             return folderResponseDTO;
+            //return folderResponseDTO;
         }
+
+
+
+
+    
+
+
+
 
 
 
@@ -319,5 +340,90 @@ namespace FileSystemManagement.BL
 
             return serviceResult;
         }
+
+
+        public ServiceResult Download(int folderId, int userid)
+        {
+            ServiceResult serviceResult = new ServiceResult();
+
+            if (folderId == null)
+            {
+                serviceResult = new ServiceResult()
+                {
+                    StatusCode = 400,
+                    IsSuccess = false,
+                    Message = "Invalid file",
+                };
+            }
+            else
+            {
+                var folder = _folder.Download(folderId, userid);
+                
+                if (folder != null)
+                {         
+                    serviceResult = new ServiceResult()
+                    {
+                        StatusCode = 200,
+                        IsSuccess = true,
+                        Message = "downloaded",
+                    };
+                }
+                else
+                {
+                    serviceResult = new ServiceResult()
+                    {
+                        StatusCode = 400,
+                        IsSuccess = false,
+                        Message = "invalid file",
+                    };
+                }
+
+            }
+
+            return serviceResult;
+        }
+
+
+
+
+        //public ServiceResult DownloadFile(string fileName, int folderId, int parentId, int userid)
+        //{
+        //    ServiceResult serviceResult = new ServiceResult();
+            
+        //    if(fileName == null)
+        //    {
+        //        serviceResult = new ServiceResult()
+        //        {
+        //            StatusCode = 400,
+        //            IsSuccess = false,
+        //            Message = "Invalid file",
+        //        };
+        //    }
+        //    else
+        //    {
+        //        var folder = _folder.DownloadFile(fileName, userid);
+        //        if(folder != null)
+        //        {
+        //            serviceResult = new ServiceResult()
+        //            {
+        //                StatusCode = 200,
+        //                IsSuccess = true,
+        //                Message = "downloaded",
+        //            };
+        //        }
+        //        else
+        //        {
+        //            serviceResult = new ServiceResult()
+        //            {
+        //                StatusCode = 400,
+        //                IsSuccess = false,
+        //                Message = "invalid file",
+        //            };
+        //        }
+                
+        //    }
+
+        //    return serviceResult;
+        //}
     }
 }

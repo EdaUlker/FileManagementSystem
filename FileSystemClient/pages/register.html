@@ -125,7 +125,7 @@
 
 
                                         <div class="form-group">
-                                            <input name="recover-submit" class="btn btn-outline-light btn-lg px-5" value="Kayıt Ol" type="submit">
+                                            <input id="register" name="recover-submit" class="btn btn-outline-light btn-lg px-5" value="Kayıt Ol" type="submit">
                                         </div>
                                         <br>
 
@@ -149,6 +149,7 @@
     $('#errorResult').hide();
     $("#forgotPassword").submit(function(event) {
         event.preventDefault();
+        document.getElementById("register").disabled = true;
         var $form = $(this);
 
         var name = $form.find("input[name='name']").val();

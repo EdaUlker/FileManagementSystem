@@ -12,15 +12,22 @@ namespace FileSystemManagement.BL
     {
         List<FolderResponseDTO> ListAll(FolderRequestDTO folderRequest, int userid);
 
-        FolderResponseDTO GetListById(int id);
+        FolderResponseDTO GetListById(int? id);
 
         ServiceResult CreateFolder(FolderRequestDTO folderRequest,int userid);
 
         ServiceResult DeleteFolder(FolderRequestDTO folderRequest);
 
-        FolderResponseDTO UpdateFolder(FolderRequestDTO folderRequest);
 
-        ServiceResult UploadFile(FolderUpload folderUpload);
+        ServiceResult UpdateFolder(FolderRequestDTO folderRequest);
+
+        ServiceResult UploadFile(FolderUpload folderUpload, int userid);
+
+        FolderResponseDTO GetFileNameAndParentId(int id);
+   
+       // ServiceResult DownloadFile(string fileName, int folderId, int parentId, int userid);
+
+        ServiceResult Download(int folderId, int userid);
 
     }
 }
