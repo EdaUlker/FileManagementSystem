@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -74,10 +75,76 @@ namespace FileSystemManagement.API.Controllers
 
 
 
+        [HttpGet]
+        [Authorize]
+
+        public IActionResult DownloadFiles([FromQuery] int[] folderid)
+        {
+            var username = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email).Value;
+            byte[] fileBytes = { };
+            string fileNameZip = "files" + ".zip";
+            using (var outStream = new MemoryStream())
+            {
+                using (var archive = new ZipArchive(outStream, ZipArchiveMode.Create, true))
+                {
+                    for (int i = 0; i < folderid.Count(); i++)
+                    {
+                        var fileName = GetFileNameAndParentId(folderid[i]).FileName;
+                        int parentId = (int)GetFileNameAndParentId(folderid[i]).ParentId;
+                        var path = GetParentFileName(parentId);
+                        var fullPath = "C:\\FileManagement\\" + username + path;
+                        string path2 = Path.Combine(fullPath + fileName);
+                        fileBytes = System.IO.File.ReadAllBytes(path2);
 
 
+                        var fileInArchive = archive.CreateEntry(fileName, CompressionLevel.Optimal);
+                    
+                        using (var entryStream = fileInArchive.Open())
+                        using (var fileToCompressStream = new MemoryStream(fileBytes))
+                        {
+                            fileToCompressStream.CopyTo(entryStream);
+                        }
+
+                    }
+                    
+
+                }
+                fileBytes = outStream.ToArray();
+            }
 
 
+            return File(fileBytes, "application/zip", fileNameZip);
+
+            //var username = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email).Value;
+            //byte[] fileBytes = { };
+            //string fileNameZip = "files" + ".zip";
+            ////for (int i = 0; i < folderid.Count(); i++)
+            ////
+            //var fileName = GetFileNameAndParentId(folderid).FileName;
+            //int parentId = (int)GetFileNameAndParentId(folderid).ParentId;
+            //var path = GetParentFileName(parentId);
+            //var fullPath = "C:\\FileManagement\\" + username + path;
+            //string path2 = Path.Combine(fullPath + fileName);
+            //fileBytes = System.IO.File.ReadAllBytes(path2);
+
+
+            //using (var outStream = new MemoryStream())
+            //{
+            //    using (var archive = new ZipArchive(outStream, ZipArchiveMode.Create, true))
+            //    {
+            //        var fileInArchive = archive.CreateEntry(fileName, CompressionLevel.Optimal);
+            //        using (var entryStream = fileInArchive.Open())
+            //        using (var fileToCompressStream = new MemoryStream(fileBytes))
+            //        {
+            //            fileToCompressStream.CopyTo(entryStream);
+            //        }
+            //    }
+            //    fileBytes = outStream.ToArray();
+            //}
+            ////}
+
+            //return File(fileBytes, "application/zip", fileNameZip);
+        }
 
 
         //[HttpGet]
@@ -120,7 +187,7 @@ namespace FileSystemManagement.API.Controllers
         public List<FolderResponseDTO> ListFolder([FromBody] FolderRequestDTO folder)
         {
             var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            var folderDTO = folderService.ListAll(folder,Convert.ToInt32(userId));
+            var folderDTO = folderService.ListAll(folder, Convert.ToInt32(userId));
             return folderDTO;
         }
 
@@ -182,12 +249,16 @@ namespace FileSystemManagement.API.Controllers
         [HttpPost]
         [Authorize]
         public ServiceResult UpdateFolder(FolderRequestDTO folderRequest)
-         {
+        {
             ServiceResult serviceResult = new ServiceResult();
+            var username = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email).Value;
             var userid = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
             serviceResult = folderService.UpdateFolder(folderRequest);
             if (serviceResult.IsSuccess)
             {
+                //var path = GetParentFileName(folderRequest.FolderId);
+                //var fullPath = "C:\\FileManagement\\" + username + "\\" + path;
+
                 return serviceResult;
             }
             return serviceResult;
