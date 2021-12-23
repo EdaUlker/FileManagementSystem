@@ -208,6 +208,7 @@
             <li><a href="#" class="activeMenu"><i class="fa fa-edit"></i>&nbsp;Düzenle</a></li>
             <li><a href="#" class="deleteFolder" style="color: red;"><i class="fa fa-trash"></i>&nbsp;Dosyayı Sil</a></li>
             <li><a href="#" class="downloadFolder" style="color: blue;"><i class="fas fa-download"></i>&nbsp;Dosyayı İndir</a></li>
+            <li><a href="#" class="selectFolder" style="color:seagreen"><i class="fas fa-check-square"></i>&nbsp; Dosyayı Seç</a></li>
         </ul>
     </div>
 
@@ -293,7 +294,6 @@
             newName = "",
             createName = "",
             uploadFileName = "";
-        //var parentId = null;
         var idList = [];
         var nameList = [];
 
@@ -329,14 +329,81 @@
             document.getElementById("createFolder").style.display = "block";
         });
 
-        $(function() {
-            $(".selectable").selectable();
-            $(".selectable").bind("mousedown", function(event, ui) {
-                event.ctrlKey = true;
+        // $(function(event) {
+        //     $(".selectable").selectable();
+        //     event.ctrlKey = true;
+        //     // $(".selectable").bind("mousedown", function(event, ui) {
 
-            });
 
-        });
+        //     // });
+
+        // });
+
+
+        // var $currentlySelected = null;
+        // var selected = [];
+
+        // $('.selectable').selectable({
+        //     start: function(event, ui) {
+        //         $currentlySelected = $('.selectable .ui-selected');
+        //     },
+        //     stop: function(event, ui) {
+        //         for (var i = 0; i < selected.length; i++) {
+        //             if ($.inArray(selected[i], $currentlySelected) >= 0) {
+        //                 $(selected[i]).removeClass('ui-selected');
+        //             }
+        //         }
+        //         selected = [];
+        //     },
+        //     selecting: function(event, ui) {
+        //         $currentlySelected.addClass('ui-selected');
+
+        //     },
+        //     selected: function(event, ui) {
+        //         selected.push(ui.selected);
+        //     }
+
+        // });
+
+        // $("").click(function() {
+        //     var $form = $(this);
+        //     url = 'http://localhost:54057/Folder/DownloadFiles/' + parentId
+        //     $.ajax({
+        //         url: url,
+        //         type: 'get',
+        //         headers: {
+        //             "authorization": "Bearer" + token
+        //         },
+        //         xhrFields: {
+        //             responseType: 'blob'
+        //         },
+        //         success: function(data) {
+        //             var blob = new Blob([data], {
+        //                 type: "application/octet-stream"
+
+        //             });
+        //             if (blob != null) {
+        //                 console.log(parentId);
+        //                 // var a = document.createElement('a');
+        //                 // var url = window.URL.createObjectURL(blob);
+        //                 // a.href = url;
+        //                 // a.download = nameFile;
+        //                 // document.body.append(a);
+        //                 // a.click();
+        //                 // a.remove();
+        //                 // window.URL.revokeObjectURL(url);
+
+        //             } else {
+        //                 $.notify("İndirme işlemi başarısız!", "error");
+        //                 console.log(parentId);
+        //             }
+        //         },
+        //         error: function(jqXHR, textStatus, errorThrown) {
+        //             $.notify("İndirme işlemi başarısız!", "error")
+        //         }
+
+        //     })
+        // })
 
 
 
@@ -415,7 +482,7 @@
                 }),
                 contentType: 'application/json',
                 success: function(data) {
-                    // console.log(clickedId);
+                    //console.log(parentId);
                     if (data.isSuccess == true) {
                         //$("#deleteBtn").addClass('disabled');
                         $.notify("Silme işlemi başarıyla gerçekleştirildi!", "success");
@@ -473,6 +540,9 @@
                 }
             });
         })
+
+
+
 
 
 
@@ -692,6 +762,7 @@
                 menuBlock.style.display = 'block';
                 document.getElementsByClassName("deleteFolder")[0].style.display = 'block';
                 document.getElementsByClassName("downloadFolder")[0].style.display = 'block';
+                document.getElementsByClassName("selectFolder")[0].style.display = 'block';
                 document.getElementsByClassName("newFolder")[0].text = "Yeni Dosya";
                 document.getElementsByClassName("folderText")[0].innerText = "Dosya Oluştur";
                 document.getElementsByClassName("modal-title")[1].innerText = "Yeni Dosya";
@@ -700,6 +771,7 @@
                 menuNone.style.display = 'none';
                 document.getElementsByClassName("deleteFolder")[0].style.display = 'none';
                 document.getElementsByClassName("downloadFolder")[0].style.display = 'none';
+                document.getElementsByClassName("selectFolder")[0].style.display = 'none';
                 document.getElementsByClassName("newFolder")[0].text = "Yeni Klasör";
                 document.getElementsByClassName("folderText")[0].innerText = "Klasör Oluştur";
                 document.getElementsByClassName("modal-title")[1].innerText = "Yeni Klasör";
@@ -729,6 +801,97 @@
             }
         }
 
+
+
+        $(".selectFolder").click(function() {
+            //console.log(parentId);
+            var checkbox = document.getElementsByClassName("form-check-input");
+            for (var i = 0; i < checkbox.length; ++i) {
+                var item = checkbox[i];
+                item.style.display = 'block';
+                //console.log(checkbox);
+            }
+            $(":checkbox").change(function() {
+                if ($('input[type=checkbox]').is(':checked')) {
+                    var numberOfChecked = $('input:checkbox:checked').length;
+                    console.log(numberOfChecked);
+
+                    if (numberOfChecked > 1) {
+                        console.log($(".form-check-input").parent().parent());
+                        //console.log(idfd);
+                        // var a = $("input").parent("listfolder");
+                        // console.log(a);
+                    }
+
+                } else {
+                    console.log("not checked");
+                }
+
+
+
+            });
+            // if ($(".form-check-input").prop('checked', false)) {
+            //     console.log(parentId);
+            // }
+
+
+
+            // if ($('input[type=checkbox]').is(':checked')) {
+            //     $(this).prop('checked', true);
+            //     console.log("dfsdf");
+            // }
+            //else {
+            //     $(this).prop('checked', false);
+            // }
+
+            // console.log(checkbox);
+
+
+            // if ($(".form-check-input").is(':checked')) {
+            //     console.log("sdfsdf");
+            // }
+
+
+
+            //console.log(parentId);
+
+            // $(".listfolder").css("background", "grey");
+        })
+
+
+        // $(function(event) {
+        //     $(".selectable").selectable();
+        //     event.ctrlKey = true;
+        // })
+
+
+
+        // var $currentlySelected = null;
+        // var selected = [];
+
+        // $('.selectable').selectable({
+        //     start: function(event, ui) {
+        //         $currentlySelected = $('.selectable .ui-selected');
+        //     },
+        //     stop: function(event, ui) {
+        //         for (var i = 0; i < selected.length; i++) {
+        //             if ($.inArray(selected[i], $currentlySelected) >= 0) {
+        //                 $(selected[i]).removeClass('ui-selected');
+        //             }
+        //         }
+        //         selected = [];
+        //     },
+        //     selecting: function(event, ui) {
+        //         $currentlySelected.addClass('ui-selected');
+
+        //     },
+        //     selected: function(event, ui) {
+        //         selected.push(ui.selected);
+        //     }
+
+        // });
+
+
         function listFolder(id) {
             var $form = $(this);
             url = "http://localhost:54057/Folder/ListFolder";
@@ -747,20 +910,20 @@
                     var divContent = '';
                     for (var i = 0; i < data.length; i++) {
                         if (data[i].type == "folder") {
-                            divContent += '<div class="col-sm-2"><div class="card mt-4 selectable listfolder onright" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><br><img id="fileImage" src="/FileSystemClient/img/128.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title text-center onright" id="dataFile">' + data[i].fileName + '</h6></div></div></div>'
+                            divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder onright" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><div><input class="form-check-input" type="checkbox" id="checkboxNoLabel" style="display:none;" value="" aria-label="..."></div><br><img id="fileImage" src="/FileSystemClient/img/128.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title text-center onright" id="dataFile">' + data[i].fileName + '</h6></div></div></div>'
                         } else if (data[i].type == "file") {
                             if ((/\.(gif|jpg|jpeg|tiff|png|jfif|psd|ai|bmp|svg)$/i).test(data[i].fileName)) {
-                                divContent += '<div class="col-sm-2"><div class="card mt-4  listfolder onright" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><br><img id="fileImage" src="/FileSystemClient/img/image.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title onright" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6><h6 class="size" style="text-align:center; margin-top:20px; font-size:12px;">' + getFileSize(data[i].fileSize) + '</h6></div></div></div>'
+                                divContent += '<div class="col-sm-2"><div class="card mt-4  listfolder onright" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><div><input class="form-check-input" type="checkbox" id="checkboxNoLabel" style="display:none;" value="" aria-label="..."></div><br><img id="fileImage" src="/FileSystemClient/img/image.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title onright" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6><h6 class="size" style="text-align:center; margin-top:20px; font-size:12px;">' + getFileSize(data[i].fileSize) + '</h6></div></div></div>'
                             } else if ((/\.(docx|doc|txt|log|mog|jfm|gpd)$/i).test(data[i].fileName)) {
-                                divContent += '<div class="col-sm-2 "><div class="card mt-4 listfolder onright" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><br><img id="fileImage" src="/FileSystemClient/img/text-format.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title onright" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6><h6 class="size" style="text-align:center; margin-top:20px; font-size:12px;">' + getFileSize(data[i].fileSize) + '</h6></div></div></div>'
+                                divContent += '<div class="col-sm-2 "><div class="card mt-4 listfolder onright" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><div><input class="form-check-input" type="checkbox" id="checkboxNoLabel" style="display:none;" value="" aria-label="..."></div><br><img id="fileImage" src="/FileSystemClient/img/text-format.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title onright" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6><h6 class="size" style="text-align:center; margin-top:20px; font-size:12px;">' + getFileSize(data[i].fileSize) + '</h6></div></div></div>'
                             } else if ((/\.(pdf)$/i).test(data[i].fileName)) {
-                                divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder onright" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><br><img id="fileImage" src="/FileSystemClient/img/pdf.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title onright" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6><h6 class="size" style="text-align:center; margin-top:20px; font-size:12px;">' + getFileSize(data[i].fileSize) + '</h6></div></div></div>'
+                                divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder onright" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><div><input class="form-check-input" type="checkbox" id="checkboxNoLabel" style="display:none;" value="" aria-label="..."></div><br><img id="fileImage" src="/FileSystemClient/img/pdf.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title onright" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6><h6 class="size" style="text-align:center; margin-top:20px; font-size:12px;">' + getFileSize(data[i].fileSize) + '</h6></div></div></div>'
                             } else if ((/\.(json)$/i).test(data[i].fileName)) {
-                                divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder onright" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><br><img id="fileImage" src="/FileSystemClient/img/json_64px.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title onright" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6><h6 class="size" style="text-align:center; margin-top:20px; font-size:12px;">' + getFileSize(data[i].fileSize) + '</h6></div></div></div>'
+                                divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder onright" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><div><input class="form-check-input" type="checkbox" id="checkboxNoLabel" style="display:none;" value="" aria-label="..."></div><br><img id="fileImage" src="/FileSystemClient/img/json_64px.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title onright" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6><h6 class="size" style="text-align:center; margin-top:20px; font-size:12px;">' + getFileSize(data[i].fileSize) + '</h6></div></div></div>'
                             } else if ((/\.(sln)$/i).test(data[i].fileName)) {
-                                divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder onright" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><br><img id="fileImage" src="/FileSystemClient/img/vs.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title onright" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6><h6 class="size" style="text-align:center; margin-top:20px; font-size:12px;">' + getFileSize(data[i].fileSize) + '</h6></div></div></div>'
+                                divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder onright" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><div><input class="form-check-input" type="checkbox" id="checkboxNoLabel" style="display:none;" value="" aria-label="..."></div><br><img id="fileImage" src="/FileSystemClient/img/vs.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title onright" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6><h6 class="size" style="text-align:center; margin-top:20px; font-size:12px;">' + getFileSize(data[i].fileSize) + '</h6></div></div></div>'
                             } else {
-                                divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder onright" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><br><img id="fileImage" src="/FileSystemClient/img/empty-file.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title onright" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6><h6 class="size" style="text-align:center; margin-top:20px; font-size:12px;">' + getFileSize(data[i].fileSize) + '</h6></div></div></div>'
+                                divContent += '<div class="col-sm-2"><div class="card mt-4 listfolder onright" style="border-radius:8%;" id=' + data[i].folderId + ' ' + '><div><input class="form-check-input" type="checkbox" id="checkboxNoLabel" style="display:none;" value="" aria-label="..."></div><br><img id="fileImage" src="/FileSystemClient/img/empty-file.png"  class="card-img-top onright ' + data[i].type + '" style="cursor: pointer;"><div class="card-body onright"><h6 class="card-title onright" style="text-align:center;" id="dataFile">' + data[i].fileName + '</h6><h6 class="size" style="text-align:center; margin-top:20px; font-size:12px;">' + getFileSize(data[i].fileSize) + '</h6></div></div></div>'
 
                             }
 
